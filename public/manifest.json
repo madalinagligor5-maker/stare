@@ -1,0 +1,22 @@
+{
+  "theme_color": "#FAF8F5",
+  "background_color": "#FAF8F5",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/dashboard",
+  "name": "Focusly PWA",
+  "short_name": "Focusly",
+  "description": "Aplicație de productivitate blândă și calmare pentru neurodivergență și ADHD.",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
