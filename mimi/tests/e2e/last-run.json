@@ -1,0 +1,206 @@
+{
+  "date": "2026-10-31T14:24:44.257Z",
+  "results": [
+    {
+      "name": "meniu se deschide",
+      "ok": true,
+      "ms": 730
+    },
+    {
+      "name": "meniu → acasă",
+      "ok": true,
+      "ms": 1432
+    },
+    {
+      "name": "Mimi reacționează la atingere pe cap (torcă, iubire crește)",
+      "ok": true,
+      "ms": 382
+    },
+    {
+      "name": "casa: cadoul zilei dă stele o singură dată",
+      "ok": true,
+      "ms": 2028
+    },
+    {
+      "name": "bucătărie: hrănire prin tragerea mâncării spre pisicuță",
+      "ok": true,
+      "ms": 1822
+    },
+    {
+      "name": "dormitor: se culcă și se trezește",
+      "ok": true,
+      "ms": 1966
+    },
+    {
+      "name": "hartă: locurile duc în scenele potrivite",
+      "ok": true,
+      "ms": 2281
+    },
+    {
+      "name": "baie: spălat în cadă",
+      "ok": true,
+      "ms": 32745
+    },
+    {
+      "name": "salon: față (mască, castraveți, clătire = stele)",
+      "ok": true,
+      "ms": 3506
+    },
+    {
+      "name": "salon: spălat complet (săpun → duș → prosop) cu degetul",
+      "ok": true,
+      "ms": 31922
+    },
+    {
+      "name": "salon: coafor (coafură nouă + Gata dă stele)",
+      "ok": true,
+      "ms": 2483
+    },
+    {
+      "name": "salon: anulează / refă",
+      "ok": true,
+      "ms": 825
+    },
+    {
+      "name": "salon: machiaj, manichiură, accesorii",
+      "ok": true,
+      "ms": 2863
+    },
+    {
+      "name": "atelier: tip, culoare, desen, decor tras cu degetul",
+      "ok": true,
+      "ms": 5670
+    },
+    {
+      "name": "atelier: salvare rochie în garderobă (cu nume)",
+      "ok": true,
+      "ms": 1097
+    },
+    {
+      "name": "garderobă: miniatură, favorite, redenumire, îmbracă",
+      "ok": true,
+      "ms": 2782
+    },
+    {
+      "name": "garderobă: ștergere cu confirmare (Nu păstrează, Da șterge)",
+      "ok": true,
+      "ms": 3897
+    },
+    {
+      "name": "cameră: așază un obiect și mută-l cu degetul",
+      "ok": true,
+      "ms": 2655
+    },
+    {
+      "name": "magazin: cumpără cu stele (și refuză blând fără stele)",
+      "ok": true,
+      "ms": 3184
+    },
+    {
+      "name": "reîncărcare: totul rămâne salvat",
+      "ok": true,
+      "ms": 134
+    },
+    {
+      "name": "fă o poză: autocolant, fotografiere, album",
+      "ok": true,
+      "ms": 2800
+    },
+    {
+      "name": "defilare: Mimi merge, juriul dă stele",
+      "ok": true,
+      "ms": 9356
+    },
+    {
+      "name": "croitorie: măsoară, taie, coase",
+      "ok": true,
+      "ms": 15271
+    },
+    {
+      "name": "mini-joc: potrivește culorile",
+      "ok": true,
+      "ms": 7950
+    },
+    {
+      "name": "mini-joc: memory cu haine",
+      "ok": true,
+      "ms": 3102
+    },
+    {
+      "name": "mini-joc: sortează accesoriile (tras cu degetul)",
+      "ok": true,
+      "ms": 3826
+    },
+    {
+      "name": "mini-joc: bule de spălat",
+      "ok": true,
+      "ms": 17516
+    },
+    {
+      "name": "mini-joc: puzzle cu rochii",
+      "ok": true,
+      "ms": 3646
+    },
+    {
+      "name": "misiuni și insigne",
+      "ok": true,
+      "ms": 2317
+    },
+    {
+      "name": "părinți: poarta cu calcul, setări, export",
+      "ok": true,
+      "ms": 2874
+    },
+    {
+      "name": "limita zilnică arată ecranul de odihnă blând",
+      "ok": true,
+      "ms": 1816
+    },
+    {
+      "name": "fără scurgeri de memorie la 60 de schimbări de scenă",
+      "ok": true,
+      "ms": 35412
+    },
+    {
+      "name": "niciun buton mort: toate opțiunile din atelier și salon răspund",
+      "ok": true,
+      "ms": 45160
+    },
+    {
+      "name": "tableta: toate scenele se văd fără erori",
+      "ok": true,
+      "ms": 17765
+    },
+    {
+      "name": "orizontal: toate scenele se văd fără erori",
+      "ok": true,
+      "ms": 16852
+    },
+    {
+      "name": "mouse: toate scenele se văd fără erori",
+      "ok": true,
+      "ms": 18044
+    },
+    {
+      "name": "mouse: atelier cu mouse-ul (tragere decor + salvare)",
+      "ok": true,
+      "ms": 1478
+    },
+    {
+      "name": "PWA: service worker-ul salvează jocul și merge fără internet",
+      "ok": true,
+      "ms": 1657
+    },
+    {
+      "name": "mimi-offline.html se deschide direct din fișier",
+      "ok": true,
+      "ms": 233
+    },
+    {
+      "name": "fără erori în consolă",
+      "ok": true,
+      "ms": 0
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#ff8fc7">
+  <meta name="description" content="Angy – pisicuța ta: salon, atelier de rochii și cameră de decorat. Joc pentru copii, fără reclame, merge offline.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Angy">
+  <title>Angy – Salon și Atelier</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <button class="btn btn-icon" id="btn-back" type="button" aria-label="Înapoi" title="Înapoi"><span class="btn-ico">⬅️</span></button>
+      <h1 id="scene-title">Angy</h1>
+      <div class="star-pill" title="Stelele tale"><span>⭐</span><span id="star-count">0</span></div>
+      <button class="btn btn-icon" id="btn-sound" type="button" aria-label="Sunet pornit/oprit" title="Sunet"><span class="btn-ico">🔊</span></button>
+    </header>
+    <main id="stage"></main>
+  </div>
+  <div id="fx" aria-hidden="true"></div>
+  <div id="toasts" aria-live="polite"></div>
+  <div id="modals"></div>
+  <noscript>Jocul Angy are nevoie de JavaScript.</noscript>
+  <div id="file-warning" hidden>
+    <div class="fw-box">
+      <div class="fw-ico">🐱</div>
+      <h2>Angy are nevoie de un mic server</h2>
+      <p>Browserul nu lasă jocul să pornească direct din fișier. Deschide în schimb <b>mimi-offline.html</b> (din același folder), sau pornește serverul cu <code>node tools/server.mjs</code> și intră pe <b>http://localhost:8080</b>.</p>
+    </div>
+  </div>
+  <script>
+    // Deschis direct ca fișier (file://)? Modulele nu merg: arătăm instrucțiuni prietenoase.
+    if (location.protocol === 'file:') document.getElementById('file-warning').hidden = false;
+  </script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
