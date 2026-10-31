@@ -49,6 +49,14 @@ Sfat: intră o dată în **⚙️ Pentru părinți** (rotița din ecranul de sta
 3. După un minut, jocul e la `https://NUMELE-TAU.github.io/NUMELE-DEPOZITULUI/mimi/`.
    (Dacă vrei ca jocul să fie direct la rădăcină, pune conținutul folderului `mimi/` într-un depozit separat.)
 
+### Vercel
+1. Intră pe <https://vercel.com/new> și alege **Import** la depozitul `stare`.
+2. La **Root Directory** apasă **Edit** și alege folderul **`mimi`**.
+3. La **Framework Preset** alege **Other**. Build Command și Output Directory rămân goale.
+4. Apasă **Deploy**. Primești o adresă de forma `https://NUME.vercel.app`.
+
+(Fișierul `mimi/vercel.json` setează deja antetele corecte pentru modul offline.)
+
 ### Netlify (cel mai rapid, fără cont GitHub)
 1. Intră pe <https://app.netlify.com/drop>.
 2. Trage folderul `mimi/` în pagină.
