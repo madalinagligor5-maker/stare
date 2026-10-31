@@ -92,7 +92,7 @@ async function mainFlow(browser) {
     await shot(page, 'telefon-01-meniu');
   });
   await step('meniu → acasă', async () => {
-    await tap(page, 'text=Hai să ne jucăm!', T);
+    await tap(page, '.btn-play', T);
     await page.waitForFunction(() => document.body.dataset.scene === 'home');
     await shot(page, 'telefon-02-acasa');
   });
@@ -103,27 +103,73 @@ async function mainFlow(browser) {
     await wait(300);
     assert((await state(page)).stats.pet === before + 1, 'mângâierea nu a contat');
   });
-  await step('hrănire prin tragerea mâncării spre Mimi', async () => {
+  await step('casa: cadoul zilei dă stele o singură dată', async () => {
+    const before = (await state(page)).stars;
+    await tap(page, '.side-btn:has-text("Cadouri")', T);
+    await page.waitForSelector('.modal-overlay:not(.out) .modal:has-text("Cadoul zilei")');
+    await shot(page, 'telefon-02b-cadou');
+    await closeModals(page);
+    assert((await state(page)).stars === before + 10, 'cadoul nu a dat stele');
+    await tap(page, '.side-btn:has-text("Cadouri")', T);
+    await page.waitForSelector('.modal-overlay:not(.out) .modal:has-text("deja")');
+    await closeModals(page);
+    assert((await state(page)).stars === before + 10, 'cadoul s-a dat de două ori');
+  });
+  await step('bucătărie: hrănire prin tragerea mâncării spre pisicuță', async () => {
     await tap(page, '.dock .btn:has-text("Mâncare")', T);
-    const food = await page.locator('.food').first().boundingBox();
-    const mimi = await page.locator('.home-room .mimi').boundingBox();
+    await page.waitForFunction(() => document.body.dataset.scene === 'kitchen');
+    await wait(300);
+    const food = await page.locator('.care-tray .food').first().boundingBox();
+    const mimi = await page.locator('.care-stage .mimi').boundingBox();
     const before = (await state(page)).stats.feed;
     await touchDrag(page, [{ x: food.x + 30, y: food.y + 30 }, { x: mimi.x + mimi.width / 2, y: mimi.y + mimi.height * 0.3 }]);
     await wait(300);
     assert((await state(page)).stats.feed === before + 1, 'hrănirea nu a contat');
-    await tap(page, '.food-tray .btn-ok', T);
+    await shot(page, 'telefon-03-bucatarie');
   });
-  await step('somn: Mimi se culcă și se trezește', async () => {
-    await tap(page, '.dock .btn:has-text("Somn")', T);
+  await step('dormitor: se culcă și se trezește', async () => {
+    await goScene(page, 'bedroom');
+    await tap(page, '.care-bottom .btn:has-text("Culcă")', T);
     assert((await state(page)).pet.sleeping === true, 'nu doarme');
-    await shot(page, 'telefon-03-somn');
-    await tap(page, '.dock .btn:has-text("Trezește")', T);
+    await tap(page, '.care-bottom .opt[data-id="inimioare"]', T);
+    assert((await state(page)).sleepTheme === 'inimioare', 'pătura');
+    await shot(page, 'telefon-03b-somn');
+    await tap(page, '.care-bottom .btn:has-text("Trezește")', T);
     assert((await state(page)).pet.sleeping === false, 'nu s-a trezit');
   });
-
-  await step('salon: spălat complet (săpun → duș → prosop) cu degetul', async () => {
+  await step('hartă: locurile duc în scenele potrivite', async () => {
+    await goScene(page, 'map');
+    await shot(page, 'telefon-03c-harta');
+    await tap(page, '.map-pin[data-place="jocuri"]', T);
+    await page.waitForFunction(() => document.body.dataset.scene === 'games');
+    await goScene(page, 'map');
+    await tap(page, '.map-pin[data-place="plaja"]', T);
+    await page.waitForFunction(() => document.body.dataset.scene === 'photo');
+  });
+  await step('baie: spălat în cadă', async () => {
+    await goScene(page, 'bath');
+    const before = await state(page);
+    const box = await page.locator('.editor-stage').boundingBox();
+    for (let round = 0; round < 14 && (await state(page)).stats.wash === before.stats.wash; round++) {
+      for (let y = box.y + 40; y < box.y + box.height * 0.72; y += 20) await touchDrag(page, [{ x: box.x + box.width * 0.2, y }, { x: box.x + box.width * 0.8, y }], { steps: 5 });
+      if (round === 0) await shot(page, 'telefon-03d-baie');
+    }
+    assert((await state(page)).stats.wash === before.stats.wash + 1, 'baia nu s-a terminat');
+  });
+  await step('salon: față (mască, castraveți, clătire = stele)', async () => {
+    await goScene(page, 'home');
     await tap(page, '.dock .btn:has-text("Salon")', T);
     await page.waitForFunction(() => document.body.dataset.scene === 'salon');
+    await tap(page, '.btn:has-text("Castraveți")', T);
+    await tap(page, '.opt[data-id="capsuni"]', T);
+    await shot(page, 'telefon-03e-masca');
+    const before = (await state(page)).stars;
+    await tap(page, '.btn:has-text("Clătește fața")', T);
+    await wait(800);
+    assert((await state(page)).stars === before + 3, 'clătirea nu a dat stele');
+  });
+  await step('salon: spălat complet (săpun → duș → prosop) cu degetul', async () => {
+    await tap(page, '.tab[data-id="wash"]', T);
     await wait(300);
     const before = await state(page);
     const box = await page.locator('.editor-stage').boundingBox();
@@ -228,7 +274,7 @@ async function mainFlow(browser) {
     await tap(page, '.modal-overlay:not(.out) .modal .btn-ok', T);
     await wait(300);
     assert((await state(page)).wardrobe[0].name === 'Rochia mea albastră', 'redenumirea');
-    await tap(page, '.card .btn[title="Îmbracă-o pe Mimi"]', T);
+    await tap(page, '.card .btn[title="Îmbracă-o pe Angy"]', T);
     assert((await state(page)).look.outfit?.type === 'printesa', 'Mimi nu poartă rochia');
     await shot(page, 'telefon-08-garderoba');
   });
@@ -270,7 +316,7 @@ async function mainFlow(browser) {
     await shot(page, 'telefon-09-camera');
   });
   await step('magazin: cumpără cu stele (și refuză blând fără stele)', async () => {
-    await goScene(page, 'shop', { cat: 'mobila' });
+    await goScene(page, 'shop', { cat: 'deco' });
     const before = await state(page);
     await tap(page, '.card[data-id="f-minge"] .btn', T);
     await tap(page, '.modal-overlay:not(.out) .modal .btn-ok', T);
@@ -279,7 +325,7 @@ async function mainFlow(browser) {
     assert(st.owned.includes('f-minge'), 'nu s-a cumpărat');
     assert(st.stars === before.stars - 4, `prețul: ${before.stars} → ${st.stars}`);
     await page.evaluate(() => { window.__mimi.ctx.store.state.stars = 1; });
-    await goScene(page, 'shop', { cat: 'mobila' });
+    await goScene(page, 'shop', { cat: 'mobilier' });
     await tap(page, '.card[data-id="f-pat-printesa"] .btn', T);
     assert(await page.locator('.modal-overlay:not(.out) .modal:has-text("Mai ai nevoie")').count(), 'lipsește mesajul blând');
     await closeModals(page);
@@ -461,7 +507,7 @@ async function mainFlow(browser) {
   });
 
   await step('fără scurgeri de memorie la 60 de schimbări de scenă', async () => {
-    const order = ['home', 'salon', 'atelier', 'wardrobe', 'room', 'shop', 'quests', 'games', 'album', 'mg-colors', 'mg-bubbles', 'photo', 'menu'];
+    const order = ['home', 'kitchen', 'bath', 'bedroom', 'map', 'salon', 'atelier', 'wardrobe', 'room', 'shop', 'quests', 'games', 'album', 'mg-colors', 'mg-bubbles', 'photo', 'menu'];
     await goScene(page, 'home');
     const base = await page.evaluate(() => ({ h: window.__mimi.getActiveHandles(), b: window.__mimi.busCount(), n: document.getElementsByTagName('*').length, fx: document.querySelectorAll('.wand, .dragging').length }));
     for (let i = 0; i < 60; i++) await goScene(page, order[i % order.length]);
@@ -505,7 +551,7 @@ async function viewportShots(browser, name, viewport, touch) {
   await page.goto(`${BASE}?fara-sw`);
   await page.waitForFunction(() => !!window.__mimi);
   await step(`${name}: toate scenele se văd fără erori`, async () => {
-    for (const sc of ['menu', 'home', 'salon', 'atelier', 'wardrobe', 'room', 'shop', 'quests', 'games', 'mg-memory', 'photo', 'tailor', 'parents']) {
+    for (const sc of ['menu', 'home', 'kitchen', 'bath', 'bedroom', 'map', 'salon', 'atelier', 'wardrobe', 'room', 'shop', 'quests', 'games', 'mg-memory', 'photo', 'tailor', 'parents']) {
       await goScene(page, sc);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
       assert(!overflow, `${sc}: pagina iese în lateral`);
@@ -553,7 +599,7 @@ async function offlineCheck(browser) {
   await step('mimi-offline.html se deschide direct din fișier', async () => {
     await p2.goto(`file://${path.join(root, 'mimi-offline.html')}`);
     await p2.waitForFunction(() => !!window.__mimi);
-    await p2.locator('text=Hai să ne jucăm!').click();
+    await p2.locator('.btn-play').click();
     await p2.waitForFunction(() => document.body.dataset.scene === 'home');
   });
   await ctx2.close();

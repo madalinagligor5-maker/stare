@@ -7,7 +7,7 @@ export function defaultNails() {
   return Array.from({ length: 10 }, () => ({ color: null, color2: '#ffffff', pattern: 'simplu', glitter: false }));
 }
 
-// Ținuta cu care începe Mimi: puloveraș roz, fustă în carouri, poșetuță inimă.
+// Ținuta cu care începe Angy: puloveraș roz, fustă în carouri, poșetuță inimă.
 export function starterOutfit() {
   return {
     ...defaultDesign(), type: 'bluza', colorA: '#ff9cc8', colorB: '#ff7fb6', pattern: 'carouri', patternColor: '#ffffff',
@@ -27,7 +27,7 @@ export function defaultLook() {
     },
     nails: defaultNails(),
     acc: { bow: { id: 'fundita-mare', color: '#ff6fae' }, crown: null, glasses: null, earrings: null, scarf: null },
-    outfit: starterOutfit(), // o rochie din atelier purtată de Mimi
+    outfit: starterOutfit(), // o rochie din atelier purtată de Angy
   };
 }
 
@@ -50,7 +50,7 @@ export function defaultState(now = Date.now()) {
     version: SCHEMA_VERSION,
     createdAt: now,
     pet: {
-      name: 'Mimi',
+      name: 'Angy',
       needs: { hunger: 80, play: 80, clean: 70, sleep: 85, love: 80 },
       lastTick: now,
       lastVisit: now,
@@ -76,6 +76,8 @@ export function defaultState(now = Date.now()) {
     album: [],
     quests: { day: null, list: [] },
     badges: {},
+    gifts: { lastDay: '' }, // cadoul zilnic
+    sleepTheme: 'stele', // pătura din dormitor
     collections: {}, // colecții complete pentru care s-a primit bonusul
     stats: {
       wash: 0, dress: 0, photo: 0, runway: 0, minigame: 0, feed: 0, play: 0, pet: 0,

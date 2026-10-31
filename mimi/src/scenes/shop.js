@@ -2,7 +2,7 @@
 
 import { h, btn, svgFromString } from '../core/ui.js';
 import { isUnlocked, collectionProgress } from '../core/economy.js';
-import { ALL_ITEMS, SHOP_CATS } from '../data/catalog.js';
+import { ALL_ITEMS, SHOP_CATS, shopShelf } from '../data/catalog.js';
 import { COLLECTIONS } from '../data/furniture.js';
 import { buyFlow, patternPreview, centeredPreview, viewPreview, ACC_VIEW } from './common.js';
 import { furniturePreview, surfacePreview } from './room.js';
@@ -46,7 +46,7 @@ export const shopScene = {
       return h('div', { class: 'card', dataset: { id: it.id } },
         h('div', { class: 'card-art' }, svgFromString(itemPreview(it))),
         h('div', { class: 'card-title', title: it.name }, it.name),
-        owned ? h('div', { class: 'owned-badge' }, '✓ Al tău') : btn({ icon: '⭐', label: `${it.price}`, cls: s.stars >= it.price ? 'btn-ok' : 'btn-soft', onClick: async () => { if (await buyFlow(ctx, it)) render(); } }),
+        owned ? h('div', { class: 'owned-badge' }, '✓ Al tău') : btn({ icon: '⭐', label: `${it.price}`, attrs: { 'aria-label': `Cumpără pentru ${it.price} stele` }, cls: s.stars >= it.price ? 'btn-ok' : 'btn-soft', onClick: async () => { if (await buyFlow(ctx, it)) render(); } }),
       );
     }
 
@@ -67,7 +67,7 @@ export const shopScene = {
         return;
       }
       const grid = h('div', { class: 'grid' });
-      paid.filter((it) => it.shop === cat).sort((a, b) => a.price - b.price).forEach((it) => grid.appendChild(card(it)));
+      paid.filter((it) => shopShelf(it) === cat).sort((a, b) => a.price - b.price).forEach((it) => grid.appendChild(card(it)));
       scroll.appendChild(grid);
     }
     render();

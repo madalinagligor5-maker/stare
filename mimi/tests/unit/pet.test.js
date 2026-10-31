@@ -41,3 +41,10 @@ test('ziua și noaptea după ora reală', () => {
   assert.equal(dayPhase(new Date(2026, 0, 1, 23)), 'night');
   assert.equal(dayPhase(new Date(2026, 0, 1, 3)), 'night');
 });
+
+test('nivelul crește cu stelele câștigate', async () => {
+  const { levelInfo, STARS_PER_LEVEL } = await import('../../src/core/pet.js');
+  assert.deepEqual(levelInfo(0), { level: 1, progress: 0 });
+  assert.equal(levelInfo(STARS_PER_LEVEL).level, 2);
+  assert.equal(levelInfo(STARS_PER_LEVEL * 1.5).progress, 0.5);
+});

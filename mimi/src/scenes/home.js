@@ -1,27 +1,22 @@
-// Acasă: camera lui Mimi, nevoile ei și drumul spre toate celelalte locuri.
+// Acasă: camera lui Angy, cu butoane pe margini (misiuni, cadouri, album / jocuri, magazin,
+// decorațiuni, hartă) și bara de jos (mâncare, baie, salon, ținute, somn).
 
-import { h, btn, svgFromString, burst, toast } from '../core/ui.js';
+import { h, btn, svgFromString, burst, modal } from '../core/ui.js';
 import { MimiLive } from '../art/mimiLive.js';
 import { renderRoom, renderLighting } from '../art/room.js';
-import { NEEDS, care, moodOf, lowestNeed } from '../core/pet.js';
+import { NEEDS, care, moodOf, lowestNeed, levelInfo } from '../core/pet.js';
 import { svgPoint } from '../core/input.js';
+import { dayKey } from '../core/util.js';
 
-const FOODS = [
-  { icon: '🐟', name: 'Peștișor', hunger: 22 },
-  { icon: '🥛', name: 'Lăptic', hunger: 14 },
-  { icon: '🍓', name: 'Căpșună', hunger: 10 },
-  { icon: '🧁', name: 'Brioșă', hunger: 16 },
-  { icon: '🍪', name: 'Biscuite', hunger: 12 },
-];
-
-const MIMI_T = { x: 83, y: 192, k: 0.78 }; // poziția lui Mimi în cameră
+const MIMI_T = { x: 83, y: 192, k: 0.78 }; // poziția pisicuței în cameră
+export const DAILY_GIFT = 10;
 
 function moodText(s, mood, phase) {
   const name = s.pet.name;
   if (mood === 'adormita') return s.pet.sleeping ? 'Zzz… (atinge-o ușor pe cap)' : `${name} e somnoroasă… 🌙`;
   if (mood === 'mofturoasa') {
     const low = lowestNeed(s.pet).id;
-    return { hunger: 'Mi-e un pic foame… 🐟', play: 'Hai să ne jucăm! 🧶', clean: 'Aș face o băiță! 🫧', sleep: 'Sunt somnoroasă… 🌙', love: 'Vreau o mângâiere! 💗' }[low];
+    return { hunger: 'Mi-e un pic foame… 🍓', play: 'Hai să ne jucăm! 🧶', clean: 'Aș face o băiță! 🫧', sleep: 'Sunt somnoroasă… 🌙', love: 'Vreau o mângâiere! 💗' }[low];
   }
   if (phase === 'morning') return 'Bună dimineața! ☀️';
   if (phase === 'evening') return 'Ce seară frumoasă! 🌆';
@@ -30,21 +25,18 @@ function moodText(s, mood, phase) {
 
 export const homeScene = {
   id: 'home',
-  title: (s) => `Camera lui ${s.pet.name}`,
+  title: (s) => s.pet.name,
   back: 'menu',
   mount(root, ctx, params, scope) {
     const s = ctx.store.state;
     const phase = ctx.phase();
-    let mode = 'idle'; // idle | feed | play
+    let mode = 'idle'; // idle | play
 
     const svg = svgFromString(`<svg viewBox="0 0 400 520" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Camera"><g class="room"></g><g transform="translate(${MIMI_T.x} ${MIMI_T.y}) scale(${MIMI_T.k})"><g class="mimi"></g></g><g class="light"></g></svg>`);
     const roomG = svg.querySelector('.room');
     const lightG = svg.querySelector('.light');
-    const drawRoom = () => {
-      roomG.innerHTML = renderRoom(s.room, { p: 'home', phase });
-      lightG.innerHTML = renderLighting(s.room, { p: 'home', phase, dark: s.pet.sleeping });
-    };
-    drawRoom();
+    roomG.innerHTML = renderRoom(s.room, { p: 'home', phase });
+    lightG.innerHTML = renderLighting(s.room, { p: 'home', phase, dark: s.pet.sleeping });
 
     const mimi = new MimiLive(svg.querySelector('.mimi'), {
       getLook: () => s.look, getDesign: () => s.look.outfit, scope, audio: ctx.audio,
@@ -52,34 +44,55 @@ export const homeScene = {
     });
     const bubble = h('div', { class: 'mood-bubble', role: 'status' }, '');
     const roomBox = h('div', { class: 'home-room' }, svg, bubble);
-    // (nevoile, butoanele și navigarea plutesc peste cameră)
     const zzzBox = h('div', {});
     roomBox.appendChild(zzzBox);
+    const mimiRect = () => svg.querySelector('.mimi').getBoundingClientRect();
 
-    // ---- nevoi ----
+    // ---- nivel + nevoi (sus) ----
+    const lvlNum = h('span', { class: 'lvl-num' });
+    const lvlFill = h('div');
+    const levelBadge = h('div', { class: 'level-badge', title: 'Nivel' }, h('span', { class: 'lvl-heart' }, lvlNum), h('div', { class: 'lvl-bar' }, lvlFill));
     const needEls = {};
-    const needs = h('div', { class: 'needs-panel' }, NEEDS.map((n) => {
-      const fill = h('div', { class: 'need-fill', style: { background: n.color } });
-      needEls[n.id] = fill;
-      return h('div', { class: 'need-row', title: n.name },
-        h('span', { class: 'need-ico', style: { background: n.color } }, n.icon),
-        h('div', { class: 'need-main' }, h('span', { class: 'need-name' }, n.name), h('div', { class: 'need-bar' }, fill)));
+    const needs = h('div', { class: 'need-chips' }, NEEDS.map((n) => {
+      const el = h('div', { class: 'need-chip', title: n.name, style: { '--c': n.color } }, h('span', {}, n.icon));
+      needEls[n.id] = el;
+      return el;
     }));
+
+    // ---- coloanele de butoane ----
+    const giftDot = h('span', { class: 'red-dot', hidden: true });
+    const questDot = h('span', { class: 'red-dot', hidden: true });
+    const side = (icon, label, fn, dot) => {
+      const b = btn({ icon, label, cls: 'side-btn', say: true, onClick: fn });
+      if (dot) b.appendChild(dot);
+      return b;
+    };
+    const left = h('div', { class: 'side-col left' },
+      side('📋', 'Misiuni', () => ctx.go('quests'), questDot),
+      side('🎁', 'Cadouri', () => openGift(), giftDot),
+      side('📸', 'Album', () => ctx.go('album')),
+      side('🧶', 'Joacă', () => { if (s.pet.sleeping) { say(`${s.pet.name} doarme acum. 💤`); return; } setMode(mode === 'play' ? 'idle' : 'play'); }),
+    );
+    const right = h('div', { class: 'side-col right' },
+      side('🎮', 'Jocuri', () => ctx.go('games')),
+      side('🏪', 'Magazin', () => ctx.go('shop')),
+      side('🪴', 'Decorațiuni', () => ctx.go('room')),
+      side('🗺️', 'Hartă', () => ctx.go('map')),
+    );
+    roomBox.append(levelBadge, needs, left, right);
+
     const refresh = () => {
-      for (const n of NEEDS) needEls[n.id].style.width = `${Math.round(s.pet.needs[n.id])}%`;
+      for (const n of NEEDS) needEls[n.id].style.setProperty('--v', `${Math.round(s.pet.needs[n.id])}%`);
+      const lv = levelInfo(s.totalStars || 0);
+      lvlNum.textContent = lv.level;
+      lvlFill.style.width = `${Math.round(lv.progress * 100)}%`;
+      giftDot.hidden = s.gifts.lastDay === dayKey();
+      questDot.hidden = !s.quests.list.some((q) => q.done && !q.claimed);
       const mood = moodOf(s.pet, phase);
       mimi.setMood(mood);
       if (!bubble.dataset.locked) bubble.textContent = moodText(s, mood, phase);
-      sleepBtn.querySelector('.btn-ico').textContent = s.pet.sleeping ? '☀️' : '🌙';
-      const pending = s.quests.list.filter((q) => q.done && !q.claimed).length;
-      questDot.hidden = !pending;
-      questDots.innerHTML = '';
-      s.quests.list.forEach((q) => questDots.appendChild(h('span', { class: `qdot ${q.claimed ? 'claimed' : q.done ? 'done' : ''}` }, q.claimed ? '✓' : q.done ? '🎁' : '♡')));
-      sleepBtn.querySelector('.btn-lbl').textContent = s.pet.sleeping ? 'Trezește' : 'Somn';
       zzzBox.innerHTML = '';
-      if (s.pet.sleeping) {
-        for (let i = 0; i < 3; i++) zzzBox.appendChild(h('div', { class: 'zzz', style: { left: `${54 + i * 4}%`, top: '30%', animationDelay: `${i * 0.8}s` } }, 'z'));
-      }
+      if (s.pet.sleeping) for (let i = 0; i < 3; i++) zzzBox.appendChild(h('div', { class: 'zzz', style: { left: `${54 + i * 4}%`, top: '30%', animationDelay: `${i * 0.8}s` } }, 'z'));
     };
     const say = (text, ms = 2200) => {
       bubble.textContent = text;
@@ -87,92 +100,50 @@ export const homeScene = {
       scope.timeout(() => { delete bubble.dataset.locked; refresh(); }, ms);
     };
 
-    // ---- atingeri pe Mimi ----
-    let petCount = 0;
+    // cadoul zilnic (stele gratuite, o dată pe zi)
+    async function openGift() {
+      if (s.gifts.lastDay === dayKey()) {
+        await modal({ icon: '🎁', title: 'Ai deschis deja cadoul de azi', body: h('p', { class: 'hint' }, 'Revino mâine pentru un cadou nou! 🌙'), actions: [{ label: 'Bine', icon: '👍', cls: 'btn-primary', value: true }] });
+        return;
+      }
+      s.gifts.lastDay = dayKey();
+      ctx.audio.play('tada');
+      burst(innerWidth / 2, innerHeight / 2, ['🎁', '⭐', '💖', '✨'], 18);
+      ctx.reward(DAILY_GIFT, left);
+      refresh();
+      await modal({ icon: '🎁', title: `Cadoul zilei: ${DAILY_GIFT} ⭐`, body: h('p', { class: 'hint' }, `${s.pet.name} îți mulțumește că ai venit azi! 💖`), actions: [{ label: 'Mulțumesc!', icon: '💖', cls: 'btn-primary', value: true }] });
+    }
+
+    // ---- atingeri pe pisicuță ----
     scope.on(svg, 'pointerdown', (e) => {
       if (mode !== 'idle') return;
       const zone = mimi.react(e.target);
       if (!zone) return;
-      if (s.pet.sleeping && zone === 'head') {
-        say('Shh… doarme și torcă. 💤');
-        return;
-      }
-      if (s.pet.sleeping) return;
+      if (s.pet.sleeping) { if (zone === 'head') say('Shh… doarme și torcă. 💤'); return; }
       burst(e.clientX, e.clientY, zone === 'head' ? ['💖', '💗'] : ['✨', '😆'], 6);
       care(s.pet, 'love', zone === 'head' ? 5 : 3);
       care(s.pet, 'play', zone === 'tail' ? 3 : 1);
-      petCount += 1;
       ctx.track('pet');
       say({ head: 'Rrrr… ce bine! 💗', belly: 'Hi-hi, mă gâdili! 😆', feet: 'Hi-hi! 😆', tail: 'Miau! Cine e acolo? 👀', ear: 'Hi-hi, urechiușele! 😺' }[zone] || '💗', 1600);
       refresh();
     });
-    // curiozitate când degetul trece pe aproape
     let lastCurious = 0;
     scope.on(svg, 'pointermove', (e) => {
       if (mode !== 'idle' || s.pet.sleeping) return;
-      const p = svgPoint(svg, e.clientX, e.clientY);
-      const near = Math.hypot(p.x - 200, p.y - 330) < 140;
-      if (near && performance.now() - lastCurious > 6000) { lastCurious = performance.now(); mimi.flash('curious', 1200); }
+      const pt = svgPoint(svg, e.clientX, e.clientY);
+      if (Math.hypot(pt.x - 200, pt.y - 330) < 140 && performance.now() - lastCurious > 6000) { lastCurious = performance.now(); mimi.flash('curious', 1200); }
     });
 
-    // ---- butoane de grijă ----
-    const foodTray = h('div', { class: 'food-tray', hidden: true });
-    roomBox.appendChild(foodTray);
+    // ---- joaca cu pana ----
     const wand = h('div', { class: 'wand', hidden: true }, '🪶');
     document.body.appendChild(wand);
     scope.add(() => wand.remove());
-
-    const mimiRect = () => svg.querySelector('.mimi').getBoundingClientRect();
-    const feed = (food, fromEl) => {
-      if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); ctx.audio.play('soft-no'); return; }
-      if (s.pet.needs.hunger > 96) { say('Mmm, sunt sătulă! Mulțumesc! 😊'); ctx.audio.play('meow'); return; }
-      care(s.pet, 'hunger', food.hunger);
-      care(s.pet, 'love', 2);
-      mimi.flash('giggle', 900);
-      ctx.audio.play('chomp');
-      const r = mimiRect();
-      burst(r.left + r.width / 2, r.top + r.height * 0.3, [food.icon, '💖'], 6);
-      say(`Mmm, ${food.name.toLowerCase()}! Mulțumesc! 😋`);
-      ctx.track('feed');
-      refresh();
-    };
-    FOODS.forEach((food) => {
-      const el = h('div', { class: 'food', role: 'button', tabindex: '0', 'aria-label': food.name, title: food.name }, food.icon);
-      // tragi mâncarea spre Mimi sau doar atingi
-      let ghost = null, sx = 0, sy = 0, moved = false;
-      scope.on(el, 'pointerdown', (e) => {
-        e.preventDefault();
-        el.setPointerCapture(e.pointerId);
-        sx = e.clientX; sy = e.clientY; moved = false;
-        ghost = h('div', { class: 'food dragging', style: { left: `${e.clientX - 32}px`, top: `${e.clientY - 32}px` } }, food.icon);
-        document.body.appendChild(ghost);
-      });
-      scope.on(el, 'pointermove', (e) => {
-        if (!ghost) return;
-        if (Math.hypot(e.clientX - sx, e.clientY - sy) > 8) moved = true;
-        ghost.style.left = `${e.clientX - 32}px`; ghost.style.top = `${e.clientY - 32}px`;
-      });
-      const end = (e) => {
-        if (!ghost) return;
-        ghost.remove(); ghost = null;
-        const r = mimiRect();
-        const inside = e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom;
-        if (!moved || inside) feed(food, el);
-      };
-      scope.on(el, 'pointerup', end);
-      scope.on(el, 'pointercancel', () => { ghost?.remove(); ghost = null; });
-      scope.on(el, 'keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') feed(food, el); });
-      foodTray.appendChild(el);
-    });
-    foodTray.appendChild(btn({ icon: '✔', title: 'Gata', cls: 'btn-icon btn-ok', onClick: () => setMode('idle') }));
-
     let playDist = 0, playGiven = 0, lastPt = null;
     const playMove = (e) => {
       if (mode !== 'play') return;
       wand.style.left = `${e.clientX}px`; wand.style.top = `${e.clientY}px`;
       if (lastPt) {
-        const d = Math.hypot(e.clientX - lastPt.x, e.clientY - lastPt.y);
-        playDist += Math.min(d, 60);
+        playDist += Math.min(Math.hypot(e.clientX - lastPt.x, e.clientY - lastPt.y), 60);
         if (playDist > 280) {
           playDist = 0;
           care(s.pet, 'play', 5);
@@ -189,82 +160,25 @@ export const homeScene = {
     };
     scope.on(window, 'pointermove', playMove);
     scope.on(window, 'pointerdown', playMove);
-
     const playBar = h('div', { class: 'edit-tray', hidden: true }, h('span', { class: 'hint' }, 'Mișcă pana prin cameră! 🪶'), btn({ icon: '✔', label: 'Gata', cls: 'btn-ok', onClick: () => setMode('idle') }));
     roomBox.appendChild(playBar);
-
     function setMode(m) {
       mode = m;
-      foodTray.hidden = m !== 'feed';
       playBar.hidden = m !== 'play';
       wand.hidden = m !== 'play';
-      cta.style.visibility = m === 'idle' ? 'visible' : 'hidden';
       if (m === 'play') { playDist = 0; playGiven = 0; lastPt = null; wand.style.left = '50%'; wand.style.top = '50%'; say('Prinde pana! 🪶', 1800); }
-      if (m === 'feed') say('Trage mâncarea spre mine! 🍽️', 2000);
     }
 
-    const sleepBtn = btn({ icon: '🌙', label: 'Somn', cls: 'nav-btn', say: true, onClick: () => {
-      s.pet.sleeping = !s.pet.sleeping;
-      if (s.pet.sleeping) {
-        ctx.audio.melody([76, 74, 72, 67, 69, 72, 67], 0.32, 'sine', 0.1);
-        ctx.track('sleep');
-        say('Noapte bună! 💤');
-      } else {
-        ctx.audio.play('yawn');
-        mimi.flash('happy', 1000);
-        say('Bună! M-am odihnit! ☀️');
-      }
-      drawRoom();
-      ctx.store.commit();
-      refresh();
-    } });
-    const petMimi = () => {
-      if (s.pet.sleeping) { say('Shh… doarme. 💤'); return; }
-      mimi.flash('purr', 1600); ctx.audio.play('purr');
-      care(s.pet, 'love', 6); ctx.track('pet');
-      const r = mimiRect(); burst(r.left + r.width / 2, r.top + r.height * 0.25, ['💖', '💗'], 8);
-      say('Rrrr… te iubesc! 💗'); refresh();
-    };
-    const feedBtn = () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode(mode === 'feed' ? 'idle' : 'feed'); };
-    const playBtn = () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode('play'); };
-
-    // butonul mare, ca în jocurile de pe telefon
-    const cta = btn({ icon: '💗', label: 'Joacă-te cu Mimi', cls: 'btn-cta', say: true, onClick: playBtn });
-    cta.querySelector('.btn-lbl').appendChild(h('small', {}, 'Mișcă pana și fă-o să râdă!'));
-    roomBox.appendChild(cta);
-
-    // butoane rotunde sus-dreapta + cardul cu misiunile zilei
-    const questDot = h('span', { class: 'red-dot', hidden: true });
-    const questDots = h('div', { class: 'qdots' });
-    const questBtn = btn({ icon: '🏅', title: 'Misiuni și insigne', cls: 'round-btn', say: true, onClick: () => ctx.go('quests') });
-    questBtn.appendChild(questDot);
-    roomBox.appendChild(h('div', { class: 'top-actions' },
-      h('div', { class: 'row', style: { justifyContent: 'flex-end', flexWrap: 'nowrap' } },
-        questBtn,
-        btn({ icon: '🚪', title: 'Garderobă', cls: 'round-btn', say: true, onClick: () => ctx.go('wardrobe') }),
-        btn({ icon: '🛋️', title: 'Decorează camera', cls: 'round-btn', say: true, onClick: () => ctx.go('room') })),
-      btn({ icon: '🎁', label: 'Misiunile zilei', cls: 'quest-card', say: true, onClick: () => ctx.go('quests') }),
-    ));
-    roomBox.querySelector('.quest-card').appendChild(questDots);
-    roomBox.appendChild(h('div', { class: 'side-actions' },
-      btn({ icon: '📸', label: 'Poză', cls: 'round-btn big', say: true, onClick: () => ctx.go('photo', { from: 'home' }) }),
-      btn({ icon: '🖼️', label: 'Album', cls: 'round-btn big', say: true, onClick: () => ctx.go('album') }),
-      btn({ icon: '💗', label: 'Mângâie', cls: 'round-btn big', say: true, onClick: petMimi }),
-    ));
-
-    // ---- navigare jos ----
+    // ---- bara de jos ----
     const dock = h('nav', { class: 'dock', 'aria-label': 'Locuri' },
-      btn({ icon: '💇', label: 'Salon', cls: 'nav-btn', say: true, onClick: () => ctx.go('salon') }),
-      btn({ icon: '👗', label: 'Atelier', cls: 'nav-btn', say: true, onClick: () => ctx.go('atelier') }),
-      btn({ icon: '🍓', label: 'Mâncare', cls: 'nav-btn', say: true, onClick: feedBtn }),
-      btn({ icon: '🎲', label: 'Jocuri', cls: 'nav-btn', say: true, onClick: () => ctx.go('games') }),
-      sleepBtn,
-      btn({ icon: '🛍️', label: 'Magazin', cls: 'nav-btn', say: true, onClick: () => ctx.go('shop') }),
+      btn({ icon: '🍎', label: 'Mâncare', cls: 'nav-btn', say: true, onClick: () => ctx.go('kitchen') }),
+      btn({ icon: '🛁', label: 'Baie', cls: 'nav-btn', say: true, onClick: () => ctx.go('bath') }),
+      btn({ icon: '💇', label: 'Salon', cls: 'nav-btn', say: true, onClick: () => ctx.go('salon', { tab: 'face' }) }),
+      btn({ icon: '👗', label: 'Ținute', cls: 'nav-btn', say: true, onClick: () => ctx.go('atelier') }),
+      btn({ icon: '🌙', label: 'Somn', cls: 'nav-btn', say: true, onClick: () => ctx.go('bedroom') }),
     );
-    sleepBtn.className = 'btn nav-btn';
 
-    root.appendChild(h('div', { class: 'home' }, roomBox, needs, dock));
-    // pe ecran lat, camera se arată întreagă; pe ecran înalt, umple tot
+    root.appendChild(h('div', { class: 'home' }, roomBox, dock));
     const fitRoom = () => {
       const r = roomBox.getBoundingClientRect();
       if (r.height) svg.setAttribute('preserveAspectRatio', r.width / r.height > 0.95 ? 'xMidYMax meet' : 'xMidYMax slice');
@@ -272,24 +186,20 @@ export const homeScene = {
     fitRoom();
     scope.on(window, 'resize', fitRoom);
     scope.sub(ctx.bus.on('state', refresh));
-    scope.interval(() => {
-      if (s.pet.sleeping) { care(s.pet, 'sleep', 1); ctx.store.commit(); }
-    }, 1500);
     refresh();
 
-    // bun venit după o pauză lungă / trezire de dimineață
     if (ctx.welcomeBack) {
       ctx.welcomeBack = false;
       scope.timeout(() => {
         mimi.flash('giggle', 1600); mimi.bounce = 1; ctx.audio.play('meow');
         const r = mimiRect(); burst(r.left + r.width / 2, r.top + r.height * 0.3, ['💖', '✨', '🎉'], 14);
-        say(`Te-am așteptat! Ce bine că ai venit! 💖`, 3200);
+        say('Te-am așteptat! Ce bine că ai venit! 💖', 3200);
       }, 500);
     } else if (ctx.justWoke) {
       ctx.justWoke = false;
       scope.timeout(() => { ctx.audio.play('yawn'); say('Bună dimineața! M-am trezit! ☀️', 2600); }, 500);
     } else if (phase === 'night' && !s.pet.sleeping && s.pet.needs.sleep < 60) {
-      scope.timeout(() => say('E noapte… apasă pe 🌙 ca să mă culci.', 3000), 600);
+      scope.timeout(() => say('E noapte… hai în dormitor (🌙 Somn).', 3000), 600);
     }
   },
 };

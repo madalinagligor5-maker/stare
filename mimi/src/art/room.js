@@ -1,4 +1,4 @@
-// Desenul camerei lui Mimi: perete, fereastră (după ora reală), podea, obiecte, lumină de noapte.
+// Desenul camerei lui Angy: perete, fereastră (după ora reală), podea, obiecte, lumină de noapte.
 
 import { FURNITURE, WALLPAPERS, FLOORS, FLOOR_Y, ROOM_W, ROOM_H } from '../data/furniture.js';
 import { starPoints, MOTIFS } from './svg.js';
@@ -37,7 +37,7 @@ export function renderItem(it, { interactive = false, selected = false } = {}) {
   return out;
 }
 
-// phase: 'morning'|'day'|'evening'|'night'; dark: lumina stinsă (Mimi doarme)
+// phase: 'morning'|'day'|'evening'|'night'; dark: lumina stinsă (Angy doarme)
 export function renderRoom(room, { p = 'room', phase = 'day', dark = false, interactive = false, selected = null, grid = false } = {}) {
   const wpDef = (WALLPAPERS.find((w) => w.id === room.wallpaper) || WALLPAPERS[0]).draw(p);
   const flDef = (FLOORS.find((f) => f.id === room.floor) || FLOORS[0]).draw(p);
@@ -72,7 +72,7 @@ export function renderRoom(room, { p = 'room', phase = 'day', dark = false, inte
   return s;
 }
 
-// Stratul de lumină (peste Mimi): întuneric seara/noaptea + strălucirea lămpilor.
+// Stratul de lumină (peste Angy): întuneric seara/noaptea + strălucirea lămpilor.
 export function renderLighting(room, { p = 'room', phase = 'day', dark = false } = {}) {
   let dim = phase === 'night' ? 0.42 : phase === 'evening' ? 0.18 : phase === 'morning' ? 0.05 : 0;
   if (dark) dim = Math.max(dim, 0.5);

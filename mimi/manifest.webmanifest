@@ -1,7 +1,7 @@
 {
-  "name": "Mimi – Salon și Atelier",
-  "short_name": "Mimi",
-  "description": "Pisicuța Mimi: salon de frumusețe, atelier de rochii și o cameră de decorat. Fără reclame, merge offline.",
+  "name": "Angy – Salon și Atelier",
+  "short_name": "Angy",
+  "description": "Pisicuța Angy: salon de frumusețe, atelier de rochii și o cameră de decorat. Fără reclame, merge offline.",
   "lang": "ro",
   "start_url": "./index.html",
   "scope": "./",

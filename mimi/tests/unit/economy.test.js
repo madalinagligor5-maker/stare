@@ -75,3 +75,13 @@ test('catalogul: id-uri unice, prețuri blânde, colecții valide', () => {
   }
   for (const c of COLLECTIONS) assert.ok(ALL_ITEMS.filter((i) => i.collection === c.id).length >= 4);
 });
+
+test('rafturile magazinului: fiecare obiect cu preț apare într-un raft', async () => {
+  const { shopShelf, SHOP_CATS } = await import('../../src/data/catalog.js');
+  const ids = SHOP_CATS.map((c) => c.id);
+  for (const it of ALL_ITEMS.filter((i) => i.price)) assert.ok(ids.includes(shopShelf(it)), it.id);
+  assert.equal(shopShelf(itemById('f-pat-printesa')), 'mobilier');
+  assert.equal(shopShelf(itemById('coroana')), 'accesorii');
+  assert.equal(shopShelf(itemById('sirena')), 'tinute');
+  assert.equal(shopShelf(itemById('wp-spatiu')), 'deco');
+});

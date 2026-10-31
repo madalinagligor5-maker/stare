@@ -1,4 +1,4 @@
-// Mimi "vie": respiră, clipește, mișcă urechile și coada, se uită după deget,
+// Angy "vie": respiră, clipește, mișcă urechile și coada, se uită după deget,
 // reacționează diferit când o atingi pe cap, pe burtică sau pe coadă.
 
 import { renderFigure } from './figure.js';
@@ -7,7 +7,7 @@ import { newPrefix } from './svg.js';
 const EXPR_BY_MOOD = { fericita: 'happy', mofturoasa: 'pout', adormita: 'sleep', curioasa: 'curious' };
 
 export class MimiLive {
-  // group: un <g> din SVG în care se desenează Mimi
+  // group: un <g> din SVG în care se desenează Angy
   constructor(group, { getLook, getDesign = () => null, scope, audio = null, reducedMotion = () => false, onReact = null, hairState = () => null }) {
     this.g = group;
     this.getLook = getLook;
@@ -78,7 +78,7 @@ export class MimiLive {
     this.lastPointer = performance.now();
   }
 
-  // Ce zonă a lui Mimi a fost atinsă (după elementul atins).
+  // Ce zonă a lui Angy a fost atinsă (după elementul atins).
   zoneOf(target) {
     if (!target?.closest) return null;
     if (target.closest(`#${this.p}-tail`)) return 'tail';

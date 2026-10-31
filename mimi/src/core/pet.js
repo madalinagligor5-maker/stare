@@ -1,4 +1,4 @@
-// Nevoile blânde ale lui Mimi. Scad încet și nu ajung niciodată la zero.
+// Nevoile blânde ale lui Angy. Scad încet și nu ajung niciodată la zero.
 
 import { clamp } from './util.js';
 
@@ -11,7 +11,7 @@ export const NEEDS = [
 ];
 
 export const NEED_FLOOR = 25;         // sub atât nu coboară niciodată
-export const WELCOME_AFTER_MIN = 180; // după 3 ore de pauză, Mimi te întâmpină
+export const WELCOME_AFTER_MIN = 180; // după 3 ore de pauză, Angy te întâmpină
 // puncte pierdute pe minut (100 -> 25 în câteva ore)
 const RATE = { hunger: 1 / 5, play: 1 / 6, clean: 1 / 8, sleep: 1 / 9, love: 1 / 6 };
 
@@ -57,3 +57,10 @@ export function dayPhase(date = new Date()) {
 }
 
 export const PHASE_NAMES = { morning: 'Dimineață', day: 'Zi', evening: 'Seară', night: 'Noapte' };
+
+// Nivelul (inimioara de sus): crește cu stelele câștigate vreodată. Nu scade niciodată.
+export const STARS_PER_LEVEL = 50;
+export function levelInfo(totalStars = 0) {
+  const t = Math.max(0, Math.floor(totalStars));
+  return { level: 1 + Math.floor(t / STARS_PER_LEVEL), progress: (t % STARS_PER_LEVEL) / STARS_PER_LEVEL };
+}

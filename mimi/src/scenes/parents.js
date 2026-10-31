@@ -80,7 +80,7 @@ export const parentsScene = {
 
     wrap.appendChild(h('div', { class: 'section-title' }, '🐱 Personaj'));
     const nameInput = h('input', { class: 'text-input', type: 'text', value: s.pet.name, maxlength: 16, 'aria-label': 'Numele pisicuței' });
-    wrap.appendChild(row('Numele pisicuței', nameInput, btn({ icon: '✔', label: 'Salvează', cls: 'btn-ok', onClick: () => { s.pet.name = cleanName(nameInput.value, 'Mimi').slice(0, 16); nameInput.value = s.pet.name; save(); toast(`Pisicuța se numește acum ${s.pet.name}`, '🐱'); } })));
+    wrap.appendChild(row('Numele pisicuței', nameInput, btn({ icon: '✔', label: 'Salvează', cls: 'btn-ok', onClick: () => { s.pet.name = cleanName(nameInput.value, 'Angy').slice(0, 16); nameInput.value = s.pet.name; save(); toast(`Pisicuța se numește acum ${s.pet.name}`, '🐱'); } })));
 
     wrap.appendChild(h('div', { class: 'section-title' }, '💾 Salvare'));
     wrap.appendChild(row('Exportă salvarea (fișier)', btn({ icon: '⬇️', label: 'Descarcă', cls: 'btn-violet', onClick: () => {

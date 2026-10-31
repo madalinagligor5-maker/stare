@@ -47,7 +47,7 @@ export const wardrobeScene = {
           h('div', { class: 'card-art' }, svgFromString(designThumb(w.design))),
           h('div', { class: 'card-title', title: w.name }, w.name),
           h('div', { class: 'card-actions' },
-            btn({ icon: '🐱', title: 'Îmbracă-o pe Mimi', cls: 'btn-primary', onClick: (e) => {
+            btn({ icon: '🐱', title: 'Îmbracă-o pe Angy', cls: 'btn-primary', onClick: (e) => {
               s.look.outfit = clone(w.design);
               ctx.store.commit();
               ctx.audio.play('sparkle');

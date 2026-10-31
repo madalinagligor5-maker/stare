@@ -1,7 +1,7 @@
 // Catalogul hainelor din atelier. Ca să adaugi ceva nou, copiezi o intrare și îi schimbi
 // id-ul, numele și desenul. Logica jocului nu trebuie modificată.
 //
-// Coordonatele desenelor sunt în "spațiul corpului" lui Mimi (viewBox 0 0 300 420):
+// Coordonatele desenelor sunt în "spațiul corpului" lui Angy (viewBox 0 0 300 420):
 // umeri ~ y 205, talie ~ y 266, genunchi ~ y 340, tălpi ~ y 392, labe (mâini) la (100,284) și (200,284).
 // price = stele (0 = gratuit), collection = colecția tematică din care face parte.
 

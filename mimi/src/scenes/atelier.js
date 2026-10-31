@@ -1,4 +1,4 @@
-// Atelierul de rochii: miezul jocului. Editor pe manechin (sau direct pe Mimi),
+// Atelierul de rochii: miezul jocului. Editor pe manechin (sau direct pe Angy),
 // cu tip, material, culori, modele, decoruri mutate cu degetul, accesorii, Anulează/Refă.
 
 import { h, btn, tabs, optionRow, swatches, slider, toast, promptText, confirmBox, modal, burst, svgFromString } from '../core/ui.js';
@@ -52,7 +52,7 @@ export const atelierScene = {
     const stage = h('div', { class: 'editor-stage' }, svg);
     const undoBtn = btn({ icon: '↩️', title: 'Anulează', onClick: () => undoRedo('undo') });
     const redoBtn = btn({ icon: '↪️', title: 'Refă', onClick: () => undoRedo('redo') });
-    const viewBtn = btn({ icon: '🐱', label: 'Pe Mimi', onClick: () => { onMimi = !onMimi; viewBtn.querySelector('.btn-ico').textContent = onMimi ? '🧍' : '🐱'; viewBtn.querySelector('.btn-lbl').textContent = onMimi ? 'Manechin' : 'Pe Mimi'; draw(); } });
+    const viewBtn = btn({ icon: '🐱', label: 'Pe Angy', onClick: () => { onMimi = !onMimi; viewBtn.querySelector('.btn-ico').textContent = onMimi ? '🧍' : '🐱'; viewBtn.querySelector('.btn-lbl').textContent = onMimi ? 'Manechin' : 'Pe Angy'; draw(); } });
     const saveBtn = btn({ icon: '💾', label: 'Salvează', cls: 'btn-ok', say: true, onClick: () => saveToWardrobe(saveBtn) });
     stage.appendChild(h('div', { class: 'stage-tools' }, undoBtn, redoBtn, h('div', { class: 'spacer' }), viewBtn, saveBtn));
     const selBar = h('div', { class: 'stage-bottom sel-tools', hidden: true });
@@ -254,7 +254,7 @@ export const atelierScene = {
           const grid = h('div', { class: 'grid', style: { gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))' } });
           const A = (icon, label, cls, fn) => { const b = btn({ icon, label, cls: `btn-col ${cls}`, say: true, onClick: () => fn(b) }); grid.appendChild(b); };
           A('💾', 'Salvează în garderobă', 'btn-ok', (b) => saveToWardrobe(b));
-          A('🐱', 'Îmbracă-o pe Mimi', 'btn-primary', (b) => {
+          A('🐱', 'Îmbracă-o pe Angy', 'btn-primary', (b) => {
             s.look.outfit = clone(D);
             ctx.store.commit();
             ctx.audio.play('sparkle');

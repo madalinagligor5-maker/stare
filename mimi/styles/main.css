@@ -448,3 +448,72 @@ body { background: radial-gradient(circle at 20% 10%, #fff 0, transparent 40%), 
   .home { flex-direction: column; flex-wrap: nowrap; }
   .home .dock { width: auto; height: auto; display: flex; overflow-x: auto; grid-template-columns: none; border-radius: 26px 26px 0 0; }
 }
+
+/* ================================================================
+   Ecranele în stilul cerut (start, casă cu coloane, bucătărie, baie, somn, hartă)
+   ================================================================ */
+/* start */
+.scene-menu .menu-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.scene-menu .menu-wrap { position: relative; z-index: 1; justify-content: space-between; padding: calc(env(safe-area-inset-top) + 18px) 12px 28px; }
+.logo { text-align: center; position: relative; }
+.logo-crown { display: block; font-size: 38px; margin-bottom: -18px; transform: rotate(-12deg) translateX(-34px); filter: drop-shadow(0 2px 2px rgba(0,0,0,.15)); }
+.scene-menu .menu-title { font-size: clamp(58px, 17vw, 100px); line-height: 1; font-style: italic; }
+.scene-menu .menu-sub { font-size: 19px; font-style: italic; color: #b8327a; transform: rotate(-3deg); margin-top: 4px; }
+.scene-menu .menu-mimi { width: min(70vw, 44vh, 380px); }
+.btn-play { font-size: 30px; letter-spacing: 2px; min-width: min(78vw, 320px); min-height: 78px; border: 5px solid #fff; border-radius: 40px; box-shadow: 0 6px 0 rgba(214, 60, 140, .4), 0 14px 30px rgba(214, 60, 140, .35); }
+.menu-gear { z-index: 2; }
+
+/* casa: coloane de butoane */
+.side-col { position: absolute; top: 62px; z-index: 3; display: flex; flex-direction: column; gap: 8px; }
+.side-col.left { left: 8px; }
+.side-col.right { right: 8px; }
+.side-btn { flex-direction: column; gap: 0; width: 72px; min-height: 68px; padding: 4px 2px; font-size: 11.5px; border-radius: 20px; position: relative; color: #b8327a; }
+.side-btn .btn-ico { font-size: 30px; }
+.level-badge { position: absolute; left: 8px; top: 8px; z-index: 3; display: flex; align-items: center; gap: 6px; }
+.lvl-heart { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #ff9cc8, #f0307f); color: #fff; font-weight: 900; font-size: 18px; border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%; border: 3px solid #fff; box-shadow: var(--shadow); }
+.lvl-bar { width: 70px; height: 12px; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+.lvl-bar > div { height: 100%; background: linear-gradient(90deg, #ff8cc6, #b693ff); border-radius: 8px; }
+.need-chips { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 5px; }
+.need-chip { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; background: conic-gradient(var(--c) var(--v, 80%), rgba(255, 255, 255, .7) 0); box-shadow: 0 3px 8px rgba(170, 90, 160, .25); }
+.need-chip > span { width: 31px; height: 31px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+.home .mood-bubble { bottom: 14px; }
+.home .dock { gap: 6px; }
+.home .nav-btn { flex: 1 1 0; min-width: 58px; }
+@media (orientation: landscape) and (max-height: 520px) {
+  .side-col { top: 56px; flex-direction: row; gap: 6px; }
+  .side-col.right { top: auto; bottom: 8px; }
+  .side-col.left { top: auto; bottom: 8px; }
+  .side-btn { width: 60px; min-height: 58px; }
+  .side-btn .btn-ico { font-size: 22px; }
+  .home .mood-bubble { top: 60px; bottom: auto; }
+}
+
+/* bucătărie, dormitor */
+.care { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.care-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; touch-action: none; }
+.care-stage > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.care-stage .mood-bubble { top: 10px; }
+.need-line { position: absolute; left: 10px; top: 54px; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.85); border-radius: 20px; padding: 4px 10px; z-index: 2; width: 150px; box-shadow: var(--shadow); }
+.need-line .need-bar { flex: 1; margin: 0; }
+.care-bottom { background: linear-gradient(180deg, rgba(255,255,255,.95), #ffeaf5); border-radius: 26px 26px 0 0; margin-top: -18px; position: relative; z-index: 2; padding: 8px 10px calc(10px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 6px; }
+.care-bottom .hint { margin: 0; font-size: 14px; }
+.care-tray { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 6px; scrollbar-width: none; }
+.care-tray .food { flex: 0 0 auto; width: 72px; height: 72px; font-size: 42px; border-radius: 22px; background: linear-gradient(180deg, #fff, #ffe9f4); border: 3px solid #fff; }
+
+/* hartă */
+.map-wrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 6px; }
+.map-box { position: relative; height: 100%; max-width: 100%; aspect-ratio: 400 / 520; border-radius: 26px; overflow: hidden; box-shadow: var(--shadow); border: 4px solid #fff; }
+.map-box > svg { width: 100%; height: 100%; display: block; }
+.map-pin { position: absolute; transform: translate(-50%, -50%); min-height: 44px; min-width: 56px; padding: 6px 14px; border-radius: 22px; font-size: 15px; color: #b8327a; }
+.map-pin::after { content: ''; position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
+
+/* jocuri: plăci colorate */
+.scene-games { background: linear-gradient(180deg, #8a6bff, #c6a8ff); }
+.scene-games .hint { color: #fff; }
+.scene-games .card.btn-col { min-height: 150px; font-size: 14px; color: #fff; border: 4px solid #fff; border-radius: 24px; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.scene-games .card[data-game="colors"] { background: linear-gradient(160deg, #ffb3d9, #ff5fa8); }
+.scene-games .card[data-game="memory"] { background: linear-gradient(160deg, #ffd1e6, #e26aa8); }
+.scene-games .card[data-game="sort"] { background: linear-gradient(160deg, #9ee6e0, #2f9e74); }
+.scene-games .card[data-game="bubbles"] { background: linear-gradient(160deg, #bfe7ff, #3d8bfd); }
+.scene-games .card[data-game="puzzle"] { background: linear-gradient(160deg, #ffe08a, #ff9a3d); }
+.scene-shop .card, .scene-wardrobe .card { border: 3px solid #fff; background: linear-gradient(180deg, #fff, #fff3f9); }

@@ -4,11 +4,18 @@ import { DRESS_TYPES, MATERIALS, PATTERNS, OUTFIT_ACC, DECOR } from './clothes.j
 import { FURNITURE, WALLPAPERS, FLOORS } from './furniture.js';
 
 export const SHOP_CATS = [
-  { id: 'mobila', name: 'Mobilă', icon: '🛋️' },
-  { id: 'tapet', name: 'Tapet', icon: '🧱' },
-  { id: 'podea', name: 'Podea', icon: '🟫' },
-  { id: 'haine', name: 'Haine rare', icon: '👗' },
+  { id: 'tinute', name: 'Ținute', icon: '👗' },
+  { id: 'accesorii', name: 'Accesorii', icon: '👑' },
+  { id: 'mobilier', name: 'Mobilier', icon: '🛋️' },
+  { id: 'deco', name: 'Deco', icon: '🪴' },
 ];
+
+// În ce raft din magazin apare un obiect.
+export function shopShelf(it) {
+  if (it.shop === 'haine') return it.kind === 'acc' || it.kind === 'decor' ? 'accesorii' : 'tinute';
+  if (it.shop === 'mobila') return it.cat === 'mobila' || it.cat === 'lumini' ? 'mobilier' : 'deco';
+  return 'deco'; // tapet, podea
+}
 
 export const ALL_ITEMS = [
   ...FURNITURE.map((x) => ({ ...x, shop: 'mobila' })),

@@ -13,13 +13,50 @@ import { HAIR_COLORS, MAKEUP_COLORS, NAIL_COLORS, ACC_COLORS } from '../data/col
 import { ACC_VIEW, viewPreview } from './common.js';
 
 const TABS = [
-  { id: 'wash', name: 'Spălat', icon: '🛁' },
-  { id: 'hair', name: 'Coafor', icon: '💇' },
+  { id: 'face', name: 'Față', icon: '🧖' },
   { id: 'makeup', name: 'Machiaj', icon: '💄' },
-  { id: 'nails', name: 'Manichiură', icon: '💅' },
+  { id: 'hair', name: 'Coafură', icon: '💇' },
+  { id: 'nails', name: 'Unghii', icon: '💅' },
+  { id: 'wash', name: 'Spălat', icon: '🛁' },
   { id: 'acc', name: 'Accesorii', icon: '🎀' },
 ];
-const VIEW = { wash: '-10 -50 320 470', hair: '-10 -40 320 340', makeup: '40 10 220 210', acc: '-10 -50 320 470' };
+// Măștile de la "Față" (tratament de spa, doar pentru joacă: nu se salvează).
+const MASKS = [
+  { id: 'capsuni', name: 'Căpșuni', icon: '🍓', color: '#ffb3cf' },
+  { id: 'kiwi', name: 'Kiwi', icon: '🥝', color: '#c8ec9a' },
+  { id: 'lapte', name: 'Lapte', icon: '🥛', color: '#fff4e6' },
+  { id: 'miere', name: 'Miere', icon: '🍯', color: '#ffd98a' },
+];
+function spaMarkup(spa) {
+  let s = '';
+  if (spa.mask) {
+    const c = MASKS.find((m) => m.id === spa.mask).color;
+    // mască pe față, cu găuri pentru ochi, nas și gură
+    s += `<path fill-rule="evenodd" fill="${c}" opacity=".93" d="M150 92 C 210 92 236 116 236 146 C 236 178 200 194 150 194 C 100 194 64 178 64 146 C 64 116 90 92 150 92 Z M114 104 a 24 27 0 1 0 0.1 0 Z M186 104 a 24 27 0 1 0 0.1 0 Z M150 150 a 11 9 0 1 0 0.1 0 Z M150 166 a 18 12 0 1 0 0.1 0 Z"/>`;
+    for (const [x, y] of [[84, 160], [216, 160], [130, 186], [172, 186], [150, 104]]) s += `<circle cx="${x}" cy="${y}" r="3" fill="#fff" opacity=".6"/>`;
+  }
+  if (spa.cucumber) {
+    for (const x of [114, 186]) s += `<circle cx="${x}" cy="130" r="25" fill="#5cb85c" stroke="#3f8a4a" stroke-width="3"/><circle cx="${x}" cy="130" r="19" fill="#d9f5c0"/><g fill="#b8e0a0">${[0, 1, 2, 3, 4, 5].map((i) => `<ellipse cx="${(x + Math.cos(i) * 10).toFixed(1)}" cy="${(130 + Math.sin(i) * 10).toFixed(1)}" rx="2.5" ry="4"/>`).join('')}</g>`;
+  }
+  if (spa.towel) {
+    s += '<path d="M58 104 C 48 30 110 2 150 6 C 190 2 252 30 242 104 C 214 74 86 74 58 104 Z" fill="#ffd1e6" stroke="#f0a8c8" stroke-width="3"/><path d="M90 60 Q 150 20 210 60 M100 82 Q 150 50 200 82" stroke="#f0a8c8" stroke-width="3" fill="none"/><path d="M118 10 Q 150 -16 182 10 Q 150 22 118 10 Z" fill="#ffc2dc" stroke="#f0a8c8" stroke-width="3"/>';
+  }
+  return s;
+}
+// Decorul băii (în coordonatele pisicuței).
+function bathBack() {
+  let s = '<rect x="-10" y="-50" width="320" height="470" fill="#e9dcff"/>';
+  for (let x = -10; x < 310; x += 40) s += `<path d="M${x} -50 L ${x} 420" stroke="#fff" stroke-width="2" opacity=".7"/>`;
+  for (let y = -50; y < 420; y += 40) s += `<path d="M-10 ${y} L 310 ${y}" stroke="#fff" stroke-width="2" opacity=".7"/>`;
+  s += '<ellipse cx="40" cy="20" rx="34" ry="44" fill="#fff" stroke="#ffb3d1" stroke-width="5"/><ellipse cx="40" cy="20" rx="26" ry="36" fill="#dff4ff"/><rect x="236" y="70" width="70" height="8" rx="3" fill="#fff"/><rect x="242" y="44" width="14" height="26" rx="5" fill="#ff8fc7"/><rect x="262" y="50" width="14" height="20" rx="5" fill="#9ee6e0"/><circle cx="290" cy="60" r="10" fill="#ffd36b"/>';
+  return s;
+}
+function bathFront(duckY = 0) {
+  let foam = '';
+  for (let i = 0; i < 16; i++) foam += `<circle cx="${-6 + i * 21}" cy="${296 + (i % 3) * 4}" r="${14 + (i % 4) * 3}" fill="#fff" stroke="#dff1ff" stroke-width="2"/>`;
+  return `<path d="M-10 300 L 310 300 L 300 400 Q 296 420 270 420 L 30 420 Q 4 420 0 400 Z" fill="#fff" stroke="#ffb3d1" stroke-width="6"/><rect x="-14" y="294" width="328" height="14" rx="7" fill="#ff9cc8"/>${foam}<g class="duck" transform="translate(236 ${282 + duckY})"><ellipse cx="0" cy="8" rx="22" ry="13" fill="#ffd93b" stroke="#e0a800" stroke-width="2"/><circle cx="12" cy="-8" r="11" fill="#ffd93b" stroke="#e0a800" stroke-width="2"/><path d="M21 -8 L 31 -5 L 21 -2 Z" fill="#ff8a3d"/><circle cx="14" cy="-11" r="2" fill="#333"/></g>`;
+}
+const VIEW = { face: '40 10 220 210', wash: '-10 -50 320 470', hair: '-10 -40 320 340', makeup: '40 10 220 210', acc: '-10 -50 320 470' };
 const MAKEUP_TARGET = { shadow: [150, 100], lashes: [150, 112], lips: [150, 172], blush: [150, 160], glitter: [150, 140] };
 
 // ---------- Unghii mari (pentru manichiură) ----------
@@ -72,15 +109,29 @@ export const salonScene = {
   back: 'home',
   mount(root, ctx, params, scope) {
     const s = ctx.store.state;
-    let tab = params.tab || 'wash';
+    const bath = !!params.bath;
+    let tab = bath ? 'wash' : params.tab || 'face';
+    const spa = { mask: null, cucumber: false, towel: false };
     const hist = new History(80);
     hist.reset(s.look);
     const hairState = { messy: 0.75, wet: 0 };
-    let changedSinceReward = { hair: false, makeup: false, nails: false, acc: false };
+    let changedSinceReward = { face: false, hair: false, makeup: false, nails: false, acc: false };
     const p = newPrefix('sl');
 
     // ---- scena ----
-    const svg = svgFromString('<svg viewBox="-10 -50 320 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mimi la salon"><g class="mimi"></g><g class="paws"></g></svg>');
+    const svg = svgFromString('<svg viewBox="-10 -50 320 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Angy la salon"><g class="bath-bg"></g><g class="mimi"></g><g class="bath-front"></g><g class="spa"></g><g class="paws"></g></svg>');
+    const spaG = svg.querySelector('.spa');
+    const drawSpa = () => { spaG.innerHTML = tab === 'face' ? spaMarkup(spa) : ''; };
+    if (bath) {
+      svg.querySelector('.bath-bg').innerHTML = bathBack();
+      svg.querySelector('.bath-front').innerHTML = bathFront();
+      // rățușca: atingi și face „mac”
+      svg.addEventListener('pointerdown', (e) => {
+        if (!e.target.closest?.('.duck')) return;
+        ctx.audio.tone({ freq: 900, to: 600, dur: 0.18, vol: 0.2, type: 'square', filter: { type: 'bandpass', freq: 1200, q: 3 } });
+        burst(e.clientX, e.clientY, ['🦆', '🫧'], 5);
+      });
+    }
     const mimiG = svg.querySelector('.mimi');
     const pawsG = svg.querySelector('.paws');
     const canvas = h('canvas', { class: 'wash-canvas', style: { position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' } });
@@ -102,13 +153,14 @@ export const salonScene = {
 
     const panelBody = h('div', { class: 'panel-body' });
     const tabRow = tabs(TABS, tab, (id) => { tab = id; setupTab(); });
+    if (bath) tabRow.hidden = true;
     root.appendChild(h('div', { class: 'editor' }, stage, h('div', { class: 'editor-panel' }, tabRow, panelBody)));
     const label = (t) => h('div', { class: 'panel-label' }, t);
 
     function refreshTools() {
       undoBtn.disabled = !hist.canUndo;
       redoBtn.disabled = !hist.canRedo;
-      doneBtn.hidden = tab === 'wash';
+      doneBtn.hidden = tab === 'wash' || tab === 'face';
     }
     function lookChanged(kind) {
       hist.push(s.look);
@@ -133,7 +185,7 @@ export const salonScene = {
       const kind = tab === 'acc' ? 'acc' : tab;
       if (!changedSinceReward[kind]) { toast('Încearcă ceva nou mai întâi! ✨', '💡'); ctx.audio.play('soft-no'); return; }
       changedSinceReward[kind] = false;
-      ctx.track({ hair: 'hair', makeup: 'makeup', nails: 'nails', acc: 'salonacc' }[kind]);
+      ctx.track({ face: 'face', hair: 'hair', makeup: 'makeup', nails: 'nails', acc: 'salonacc' }[kind]);
       care(s.pet, 'love', 4);
       ctx.reward(3, el);
       mimi.flash('giggle', 1400);
@@ -143,7 +195,7 @@ export const salonScene = {
       toast(['Arată superb!', 'Minunat!', 'Ce frumoasă e!', 'Bravo!'][Math.floor(Math.random() * 4)], '💖');
     }
 
-    // Pensula zboară de la buton spre un punct de pe Mimi.
+    // Pensula zboară de la buton spre un punct de pe Angy.
     function flyBrush(fromEl, fx, fy, icon = '🖌️') {
       const m = mimiG.getScreenCTM();
       if (!m || !fromEl) return;
@@ -165,6 +217,7 @@ export const salonScene = {
     const CELL = 12;
     let wash = null; // { cells:[{x,y,dirt,foam,wet}], step:'soap'|'rinse'|'dry'|'done', drops:[] }
     function insideBody(x, y) {
+      if (bath && y > 292) return false; // în cadă: doar ce se vede deasupra spumei
       if (((x - 150) / 92) ** 2 + ((y - 118) / 80) ** 2 < 1) return true;
       if (x > 114 && x < 186 && y > 196 && y < 312) return true;
       if (x > 124 && x < 176 && y > 300 && y < 398) return true;
@@ -339,7 +392,7 @@ export const salonScene = {
       toolCursor.style.top = `${e.clientY - 20}px`;
     }
     function handleTool(e) {
-      // coordonate în spațiul lui Mimi
+      // coordonate în spațiul lui Angy
       const m = mimiG.getScreenCTM();
       if (!m) return;
       const inv = m.inverse();
@@ -373,6 +426,25 @@ export const salonScene = {
       const add = (...els) => els.forEach((e) => panelBody.appendChild(e));
       const L = s.look;
       switch (tab) {
+        case 'face': {
+          add(label('Tratament de spa pentru față'));
+          add(h('div', { class: 'row' },
+            btn({ icon: '🧖', label: spa.towel ? 'Prosop: DA' : 'Prosop pe cap', cls: spa.towel ? 'on' : 'btn-soft', onClick: () => { spa.towel = !spa.towel; spaChanged(); } }),
+            btn({ icon: '🥒', label: spa.cucumber ? 'Castraveți: DA' : 'Castraveți', cls: spa.cucumber ? 'on' : 'btn-soft', onClick: () => { spa.cucumber = !spa.cucumber; spaChanged(); } })));
+          add(label('Mască'), optionRow(MASKS, spa.mask, (o) => { spa.mask = spa.mask === o.id ? null : o.id; spaChanged(); }));
+          add(btn({ icon: '🚿', label: 'Clătește fața (gata!)', cls: 'btn-primary btn-big', say: true, onClick: (e) => {
+            if (!spa.mask && !spa.cucumber && !spa.towel) { toast('Pune întâi o mască sau castraveți! 🥒', '💡'); ctx.audio.play('soft-no'); return; }
+            spa.mask = null; spa.cucumber = false; spa.towel = false;
+            ctx.audio.play('water');
+            care(s.pet, 'clean', 10);
+            changedSinceReward.face = true;
+            drawSpa();
+            mimi.flash('happy', 400);
+            finishStation(e.currentTarget || doneBtn);
+            renderPanel();
+          } }));
+          break;
+        }
         case 'wash': {
           const steps = [['soap', '🧽', 'Săpun'], ['rinse', '🚿', 'Duș'], ['dry', '🧺', 'Prosop']];
           washSteps = h('div', { class: 'tailor-steps' }, steps.map(([id, ic, nm]) => {
@@ -380,11 +452,11 @@ export const salonScene = {
             const my = steps.findIndex((x) => x[0] === id);
             return h('div', { class: `step-dot ${wash.step === id ? 'on' : ''} ${wash.step === 'done' || my < idx ? 'done' : ''}`, title: nm }, ic);
           }));
-          const text = { soap: 'Freacă-o pe Mimi cu buretele ca să facă spumă!', rinse: 'Trage dușul peste ea ca să clătești spuma și noroiul!', dry: 'Șterge-o cu prosopul până se usucă!', done: 'Gata! Mimi e curată! 🫧' }[wash.step];
+          const text = { soap: 'Freacă-o pe Angy cu buretele ca să facă spumă!', rinse: 'Trage dușul peste ea ca să clătești spuma și noroiul!', dry: 'Șterge-o cu prosopul până se usucă!', done: 'Gata! Angy e curată! 🫧' }[wash.step];
           washHint = h('p', { class: 'hint' }, text);
           washBar = h('div');
           add(washSteps, washHint, h('div', { class: 'progress' }, washBar));
-          if (wash.step === 'done') add(h('div', { class: 'row row-center' }, btn({ icon: '🛁', label: 'Mai spală o dată', cls: 'btn-soft', onClick: () => { wash = newWash(); renderPanel(); } }), btn({ icon: '💇', label: 'Mergi la coafor', cls: 'btn-primary', onClick: () => { tab = 'hair'; tabRow.mark('hair'); setupTab(); } })));
+          if (wash.step === 'done') add(h('div', { class: 'row row-center' }, btn({ icon: '🛁', label: 'Mai spală o dată', cls: 'btn-soft', onClick: () => { wash = newWash(); renderPanel(); } }), btn({ icon: '💇', label: 'Mergi la coafor', cls: 'btn-primary', onClick: () => { if (bath) { ctx.go('salon', { tab: 'hair' }); return; } tab = 'hair'; tabRow.mark('hair'); setupTab(); } })));
           updateWashPanel();
           break;
         }
@@ -460,7 +532,15 @@ export const salonScene = {
       return `<svg viewBox="30 -10 240 220" xmlns="http://www.w3.org/2000/svg">${style.back(f)}<path d="M150 40 C 205 40 240 72 240 118 C 240 168 200 196 150 196 C 100 196 60 168 60 118 C 60 72 95 40 150 40 Z" fill="#ffe3cc" stroke="#e2b298" stroke-width="3"/>${style.front(f)}</svg>`;
     }
 
+    function spaChanged() {
+      ctx.audio.play('sparkle');
+      drawSpa();
+      if (spa.cucumber || spa.mask) mimi.flash('purr', 600000); else mimi.flash('happy', 300);
+      renderPanel();
+    }
     function setupTab() {
+      drawSpa();
+      if (tab !== 'face' && mimi.tempExpr === 'purr') mimi.flash('happy', 200);
       svg.setAttribute('viewBox', tab === 'nails' ? '0 40 400 260' : VIEW[tab]);
       mimiG.style.display = tab === 'nails' ? 'none' : '';
       if (tab === 'wash' && (!wash || wash.step === 'done')) wash = newWash();
@@ -484,4 +564,12 @@ export const salonScene = {
     setupTab();
     requestAnimationFrame(sizeCanvas);
   },
+};
+
+// Baia: același spălat, dar într-o cadă cu spumă.
+export const bathScene = {
+  id: 'bath',
+  title: 'Baie',
+  back: 'home',
+  mount(root, ctx, params, scope) { return salonScene.mount(root, ctx, { ...params, bath: true }, scope); },
 };

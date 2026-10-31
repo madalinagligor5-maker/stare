@@ -22,7 +22,7 @@ export const MIGRATIONS = {
     return {
       version: 2,
       stars: Number(data.stars) || 0,
-      pet: { name: data.petName || 'Mimi' },
+      pet: { name: data.petName || 'Angy' },
       wardrobe,
       dailyLimit: data.dailyLimit || 0,
     };
@@ -69,7 +69,7 @@ function sanitize(s) {
   for (const k of Object.keys(s.pet.needs)) {
     s.pet.needs[k] = Math.max(0, Math.min(100, Number(s.pet.needs[k]) || 0));
   }
-  if (!s.pet.name || typeof s.pet.name !== 'string') s.pet.name = 'Mimi';
+  if (!s.pet.name || typeof s.pet.name !== 'string') s.pet.name = 'Angy';
   return s;
 }
 
@@ -104,11 +104,11 @@ export function createSaveManager(storage, key = SAVE_KEY) {
     importData(text, now = Date.now()) {
       let parsed;
       try { parsed = JSON.parse(String(text)); } catch {
-        throw new Error('Fișierul nu este o salvare Mimi.');
+        throw new Error('Fișierul nu este o salvare Angy.');
       }
       const data = isPlainObject(parsed) && parsed.app === EXPORT_APP ? parsed.data : parsed;
       if (!isPlainObject(data) || !('version' in data || 'stars' in data || 'pet' in data)) {
-        throw new Error('Fișierul nu este o salvare Mimi.');
+        throw new Error('Fișierul nu este o salvare Angy.');
       }
       return migrate(data, now);
     },

@@ -61,7 +61,7 @@ export async function savePhotoFile(comp, mode = 'download') {
   if (mode === 'share') {
     const file = new File([blob], name, { type: 'image/png' });
     if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'Mimi' }); return 'shared'; } catch { return 'cancel'; }
+      try { await navigator.share({ files: [file], title: 'Angy' }); return 'shared'; } catch { return 'cancel'; }
     }
   }
   downloadBlob(blob, name);
@@ -91,7 +91,7 @@ export async function showPhoto(ctx, comp, { allowDelete = false } = {}) {
 export const photoScene = {
   id: 'photo',
   title: 'Fă o poză',
-  back: (params) => (params?.from === 'home' ? 'home' : 'atelier'),
+  back: (params) => params?.from || 'atelier',
   mount(root, ctx, params, scope) {
     const s = ctx.store.state;
     const comp = {
@@ -207,7 +207,7 @@ export const albumScene = {
     function render() {
       scroll.innerHTML = '';
       if (!s.album.length) {
-        scroll.appendChild(h('div', { class: 'empty' }, h('span', { class: 'big' }, '🖼️'), 'Albumul e gol. Fă prima poză cu Mimi!',
+        scroll.appendChild(h('div', { class: 'empty' }, h('span', { class: 'big' }, '🖼️'), 'Albumul e gol. Fă prima poză cu Angy!',
           h('div', { style: { marginTop: '12px' } }, btn({ icon: '📸', label: 'Fă o poză', cls: 'btn-primary', onClick: () => ctx.go('photo', { from: 'home' }) }))));
         return;
       }

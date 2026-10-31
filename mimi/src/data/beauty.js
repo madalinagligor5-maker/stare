@@ -78,7 +78,7 @@ export const NAIL_PATTERNS = [
   { id: 'degrade', name: 'Degrade', icon: '🌅' },
 ];
 
-// Accesoriile salonului (look.acc). Coordonate pe capul lui Mimi.
+// Accesoriile salonului (look.acc). Coordonate pe capul lui Angy.
 export const LOOK_SLOTS = [
   { id: 'bow', name: 'Fundițe', icon: '🎀' },
   { id: 'crown', name: 'Coronițe', icon: '👑' },

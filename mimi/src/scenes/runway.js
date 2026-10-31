@@ -1,4 +1,4 @@
-// Defilarea: Mimi merge pe podium, se învârte, publicul aplaudă, juriul dă stele.
+// Defilarea: Angy merge pe podium, se învârte, publicul aplaudă, juriul dă stele.
 
 import { h, btn, svgFromString, burst } from '../core/ui.js';
 import { renderFigure } from '../art/figure.js';
@@ -95,7 +95,7 @@ export const runwayScene = {
       } else { k = 1; }
       const scale = 0.32 + 0.5 * k;
       y = 130 + 260 * k;
-      // (150,400) din figura lui Mimi = tălpile; le punem în punctul de pe podium
+      // (150,400) din figura lui Angy = tălpile; le punem în punctul de pe podium
       walker.setAttribute('transform', `translate(200 ${y - bob}) scale(${(scale * sx).toFixed(3)} ${scale.toFixed(3)}) translate(-150 -400)`);
     });
 

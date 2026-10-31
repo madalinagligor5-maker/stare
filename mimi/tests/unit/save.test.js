@@ -9,7 +9,7 @@ test('fără salvare: pornește o stare nouă, completă', () => {
   const { state, fresh } = sm.load();
   assert.equal(fresh, true);
   assert.equal(state.version, SCHEMA_VERSION);
-  assert.equal(state.pet.name, 'Mimi');
+  assert.equal(state.pet.name, 'Angy');
   assert.ok(state.stars > 0);
 });
 
@@ -44,7 +44,7 @@ test('migrare v1 -> versiunea curentă', () => {
 });
 
 test('migrare v2 -> v3 mută setările', () => {
-  const s = migrate({ version: 2, stars: 3, pet: { name: 'Mimi' }, wardrobe: [], dailyLimit: 15, muted: true });
+  const s = migrate({ version: 2, stars: 3, pet: { name: 'Angy' }, wardrobe: [], dailyLimit: 15, muted: true });
   assert.equal(s.settings.dailyLimitMin, 15);
   assert.equal(s.settings.muted, true);
   assert.equal(s.settings.volume, 0.7);
@@ -60,7 +60,7 @@ test('salvare stricată: pornește din nou fără să crape', () => {
 test('valori imposibile sunt corectate', () => {
   const s = migrate({ version: 3, stars: -50, pet: { name: '', needs: { hunger: 500, play: -3 } }, wardrobe: 'x', album: null });
   assert.equal(s.stars, 0);
-  assert.equal(s.pet.name, 'Mimi');
+  assert.equal(s.pet.name, 'Angy');
   assert.equal(s.pet.needs.hunger, 100);
   assert.equal(s.pet.needs.play, 0);
   assert.deepEqual(s.wardrobe, []);
@@ -85,9 +85,9 @@ test('import acceptă și starea simplă (fără înveliș)', () => {
 
 test('import de fișier greșit dă o eroare prietenoasă', () => {
   const sm = createSaveManager(memoryStorage());
-  assert.throws(() => sm.importData('salut'), /nu este o salvare Mimi/);
-  assert.throws(() => sm.importData('[1,2,3]'), /nu este o salvare Mimi/);
-  assert.throws(() => sm.importData('{"altceva":1}'), /nu este o salvare Mimi/);
+  assert.throws(() => sm.importData('salut'), /nu este o salvare Angy/);
+  assert.throws(() => sm.importData('[1,2,3]'), /nu este o salvare Angy/);
+  assert.throws(() => sm.importData('{"altceva":1}'), /nu este o salvare Angy/);
 });
 
 test('stocare plină: save întoarce false, nu aruncă', () => {

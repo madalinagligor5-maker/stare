@@ -1,7 +1,7 @@
-// Desenul lui Mimi (și al manechinului) pe straturi:
+// Desenul lui Angy (și al manechinului) pe straturi:
 // aripi, coadă, păr spate, picioare, șosete/pantofi, corp, rochie, mănuși/poșetă, eșarfă/bijuterii,
 // cap + față, păr față, urechi + cercei, ochelari, accesorii de cap.
-// Toate hainele folosesc aceleași coordonate, deci se potrivesc și pe manechin, și pe Mimi.
+// Toate hainele folosesc aceleași coordonate, deci se potrivesc și pe manechin, și pe Angy.
 
 import { DRESS_TYPES, OUTFIT_ACC, DECOR } from '../data/clothes.js';
 import { HAIRSTYLES, HAIR_DECOR, LOOK_ACC, LASH_STYLES } from '../data/beauty.js';

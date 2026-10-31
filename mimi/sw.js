@@ -1,7 +1,7 @@
 // Service worker: salvează toate fișierele jocului ca să meargă complet fără internet.
 // Lista FILES se reface automat cu: node tools/update-sw.mjs
 
-const VERSION = 'mimi-202610310721';
+const VERSION = 'mimi-202610311419';
 const FILES = [
   './',
   'index.html',
@@ -34,6 +34,7 @@ const FILES = [
   'src/data/quests.js',
   'src/main.js',
   'src/scenes/atelier.js',
+  'src/scenes/care.js',
   'src/scenes/common.js',
   'src/scenes/games.js',
   'src/scenes/home.js',

@@ -67,7 +67,7 @@ function updateStars(delayed = false) {
 bus.on('state', () => updateStars(false));
 
 // ---- Progres: statistici, misiuni, insigne, colecții ----
-const SALON_EVENTS = ['hair', 'nails', 'makeup', 'salonacc', 'wash'];
+const SALON_EVENTS = ['hair', 'nails', 'makeup', 'salonacc', 'wash', 'face'];
 function track(type, payload = {}) {
   const s = store.state;
   if (type in s.stats) s.stats[type] += 1;
@@ -115,7 +115,7 @@ onTap(soundBtn, () => {
 bus.on('scene:changed', ({ scene }) => {
   backBtn.hidden = !scene.back;
   const t = typeof scene.title === 'function' ? scene.title(store.state) : scene.title;
-  titleEl.textContent = t || 'Mimi';
+  titleEl.textContent = t || 'Angy';
 });
 
 function applySettings() {
@@ -138,7 +138,7 @@ function tickTime() {
   const s = store.state;
   const minutes = decayNeeds(s.pet, Date.now());
   if (minutes >= WELCOME_AFTER_MIN) ctx.welcomeBack = true;
-  // la noapte Mimi doarme singură dacă e obosită; dimineața se trezește
+  // la noapte Angy doarme singură dacă e obosită; dimineața se trezește
   const ph = ctx.phase();
   if (ph === 'morning' && s.pet.sleeping && s.pet.needs.sleep > 60) { s.pet.sleeping = false; ctx.justWoke = true; }
   ensureDailyQuests(s, QUEST_POOL);
