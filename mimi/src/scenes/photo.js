@@ -1,6 +1,6 @@
 // "Fă poză": fundal, ramă, autocolante, expresie. Exportă PNG, salvează în album, distribuie.
 
-import { h, btn, tabs, optionRow, toast, modal, svgFromString, downloadBlob, confirmBox } from '../core/ui.js';
+import { h, btn, tabs, optionRow, toast, modal, svgFromString, downloadBlob, confirmBox, onTap } from '../core/ui.js';
 import { gesture, svgPoint } from '../core/input.js';
 import { clone, clamp, uid } from '../core/util.js';
 import { renderFigure } from '../art/figure.js';
@@ -217,7 +217,7 @@ export const albumScene = {
         const art = h('div', { class: 'card-art', style: { aspectRatio: '3 / 4' } }, svgFromString(photoSVG(ph)));
         const card = h('div', { class: 'card' }, art, h('div', { class: 'card-title' }, new Date(ph.created).toLocaleDateString('ro-RO')),
           h('div', { class: 'card-actions' }, btn({ icon: '🔍', title: 'Vezi poza', onClick: () => open(ph) }), btn({ icon: '🗑️', title: 'Șterge poza', onClick: () => del(ph) })));
-        art.addEventListener('click', () => open(ph));
+        onTap(art, () => open(ph));
         grid.appendChild(card);
       }
       scroll.appendChild(grid);

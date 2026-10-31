@@ -9,10 +9,10 @@ import { patternDef, materialLayer } from './patterns.js';
 import { mirrorPath, sparkle, starPoints, heartPath, newPrefix } from './svg.js';
 import { shade } from '../core/util.js';
 
-export const FUR = '#ffe3cc';
-export const FUR_LINE = '#e2b298';
-const BELLY = '#fff6ee';
-const EAR_IN = '#ffb8cf';
+export const FUR = '#fffaf8';
+export const FUR_LINE = '#efc3d3';
+const BELLY = '#ffffff';
+const EAR_IN = '#ffadc9';
 
 const TORSO = 'M150 196 C 125 196 112 205 112 222 C 112 245 118 262 120 270 C 114 285 112 300 118 312 L 182 312 C 188 300 186 285 180 270 C 182 262 188 245 188 222 C 188 205 175 196 150 196 Z';
 const ARM_L = 'M118 210 C 104 218 94 244 92 276 L 108 278 C 110 252 116 234 126 220 Z';
@@ -132,18 +132,18 @@ function eyeMarkup(cx, cy, side, look, p, expr) {
     return `<g id="${p}-eye${side < 0 ? 'L' : 'R'}">${s}</g>`;
   }
   const big = expr === 'curious' ? 1.08 : 1;
-  s += `<ellipse cx="${cx}" cy="${cy}" rx="${21 * big}" ry="${24 * big}" fill="#fff" stroke="#4a3048" stroke-width="2.5"/>`;
-  s += `<g id="${p}-pup${side < 0 ? 'L' : 'R'}"><ellipse cx="${cx}" cy="${cy + 2}" rx="15" ry="18" fill="#3aa6b9"/><ellipse cx="${cx}" cy="${cy + 4}" rx="15" ry="9" fill="#2b8396" opacity=".5"/><ellipse cx="${cx}" cy="${cy + 2}" rx="${expr === 'curious' ? 9.5 : 8}" ry="${expr === 'curious' ? 12.5 : 11}" fill="#2a1d2e"/><circle cx="${cx - 5}" cy="${cy - 5}" r="5.2" fill="#fff"/><circle cx="${cx + 5}" cy="${cy + 7}" r="2.4" fill="#fff"/></g>`;
+  s += `<ellipse cx="${cx}" cy="${cy}" rx="${23 * big}" ry="${26 * big}" fill="#fff" stroke="#3a2340" stroke-width="3"/>`;
+  s += `<g id="${p}-pup${side < 0 ? 'L' : 'R'}"><ellipse cx="${cx}" cy="${cy + 2}" rx="18" ry="21" fill="#22b3c6"/><ellipse cx="${cx}" cy="${cy + 2}" rx="18" ry="21" fill="none" stroke="#137f95" stroke-width="2.5"/><ellipse cx="${cx}" cy="${cy + 9}" rx="15" ry="9" fill="#7fe3ec" opacity=".55"/><ellipse cx="${cx}" cy="${cy + 1}" rx="${expr === 'curious' ? 10.5 : 9}" ry="${expr === 'curious' ? 13.5 : 12}" fill="#1d1426"/><circle cx="${cx - 6}" cy="${cy - 7}" r="6.5" fill="#fff"/><circle cx="${cx + 6}" cy="${cy + 8}" r="2.8" fill="#fff"/><circle cx="${cx + 7}" cy="${cy - 9}" r="1.8" fill="#fff"/></g>`;
   if (expr === 'pout') s += `<path d="M${cx - 24} ${cy - 30} L ${cx + 24} ${cy - 30} L ${cx + 24} ${cy - 8} Q ${cx} ${cy - 2} ${cx - 24} ${cy - 8} Z" fill="${FUR}"/><path d="M${cx - 21} ${cy - 8} Q ${cx} ${cy - 2} ${cx + 21} ${cy - 8}" stroke="#4a3048" stroke-width="2.5" fill="none"/>`;
   // gene pe marginea de sus, spre exterior
   for (let i = 0; i < lash.n; i++) {
     const t = lash.n === 1 ? 0.5 : i / (lash.n - 1);
     const deg = side < 0 ? 196 + t * 52 : 344 - t * 52;
     const a = (deg * Math.PI) / 180;
-    const px = cx + 21 * Math.cos(a), py = cy + 24 * Math.sin(a);
+    const px = cx + 23 * Math.cos(a), py = cy + 26 * Math.sin(a);
     const ex = px + lash.len * Math.cos(a), ey = py + lash.len * Math.sin(a) - lash.curl * 0.4;
     const qx = px + lash.len * 0.7 * Math.cos(a) + side * lash.curl, qy = py + lash.len * 0.7 * Math.sin(a) + lash.curl * 0.6;
-    s += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="${lashColor}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    s += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="${lashColor}" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
   }
   return `<g id="${p}-eye${side < 0 ? 'L' : 'R'}">${s}</g>`;
 }
@@ -180,9 +180,9 @@ export function renderFace(look, p, expr = 'happy') {
   s += `<ellipse cx="92" cy="160" rx="${18 * puff}" ry="${10 * puff}" fill="${blush}" opacity="${bo.toFixed(2)}"/><ellipse cx="208" cy="160" rx="${18 * puff}" ry="${10 * puff}" fill="${blush}" opacity="${bo.toFixed(2)}"/>`;
   s += eyeMarkup(114, 128, -1, look, p, expr) + eyeMarkup(186, 128, 1, look, p, expr);
   if (expr === 'curious') s += '<path d="M98 92 Q 114 82 130 92 M170 92 Q 186 82 202 92" stroke="#c9917a" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
-  s += `<path d="${heartPath(150, 157, 0.95)}" fill="#ff8fb1" stroke="#e0718f" stroke-width="1.5"/>`;
+  s += `<path d="${heartPath(150, 157, 0.95)}" fill="#ff86b0" stroke="#e8679a" stroke-width="1.5"/><ellipse cx="146" cy="153" rx="2.5" ry="1.5" fill="#fff" opacity=".8"/>`;
   s += mouthMarkup(look, expr);
-  s += '<g stroke="#c99a86" stroke-width="2.5" stroke-linecap="round"><path d="M84 150 L 46 143"/><path d="M84 158 L 44 160"/><path d="M86 166 L 50 176"/><path d="M216 150 L 254 143"/><path d="M216 158 L 256 160"/><path d="M214 166 L 250 176"/></g>';
+  s += '<g stroke="#e4b9c8" stroke-width="2.2" stroke-linecap="round"><path d="M84 150 L 46 143"/><path d="M84 158 L 44 160"/><path d="M86 166 L 50 176"/><path d="M216 150 L 254 143"/><path d="M216 158 L 256 160"/><path d="M214 166 L 250 176"/></g>';
   if (mk.glitter?.color) {
     const o = (0.3 + mk.glitter.amount / 140).toFixed(2);
     s += `<g opacity="${o}">${[[86, 140, 5], [100, 172, 4], [214, 140, 5], [200, 172, 4], [112, 94, 4], [188, 94, 4], [150, 140, 3]].map(([x, y, r], i) => sparkle(x, y, r, mk.glitter.color, `class="twinkle" style="animation-delay:${i * 0.2}s"`)).join('')}</g>`;
@@ -237,6 +237,7 @@ export function renderFigure(opts = {}) {
   if (isMimi) s += `<ellipse cx="150" cy="268" rx="22" ry="32" fill="${BELLY}"/>`;
   else s += '<path d="M150 200 L 150 310" stroke="#cdb08c" stroke-width="1.5" stroke-dasharray="5 4"/>';
   s += `<circle cx="100" cy="284" r="12" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/><circle cx="200" cy="284" r="12" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/>`;
+  if (isMimi) s += '<g fill="#ffb3cb"><ellipse cx="100" cy="288" rx="5" ry="4"/><ellipse cx="200" cy="288" rx="5" ry="4"/></g>';
   s += '</g>';
   s += `<g class="fig-dress">${o.dress}</g>`;
   s += `<g class="fig-over">${isMimi ? pawNails(look?.nails) : ''}${o.over}</g>`;
@@ -247,6 +248,7 @@ export function renderFigure(opts = {}) {
   s += `<g id="${p}-head" class="fig-head"${isMimi ? '' : ' transform="translate(150 200) scale(.62) translate(-150 -200)"'}>`;
   s += `<path d="${TUFT_L}" fill="${furC}" stroke="${lineC}" stroke-width="2"/><path d="${mirrorPath(TUFT_L)}" fill="${furC}" stroke="${lineC}" stroke-width="2"/>`;
   s += `<path d="${HEAD}" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/>`;
+  if (isMimi) s += `<path d="M126 44 Q 138 30 146 42 Q 152 28 162 42 Q 172 32 176 46" fill="${furC}" stroke="${lineC}" stroke-width="2"/><path d="M128 46 L 174 48" stroke="${furC}" stroke-width="5"/>`;
   if (isMimi) {
     s += `<g id="${p}-face">${renderFace(look, p, expr)}</g>`;
     if (style) s += `<g class="hair-front">${style.front(hf.fill)}${hairEffects(hairState, hair.color)}</g>`;

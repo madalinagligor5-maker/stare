@@ -4,7 +4,7 @@ import { bus } from './core/bus.js';
 import { audio } from './core/audio.js';
 import { createSaveManager } from './core/save.js';
 import { SceneManager, getActiveHandles } from './core/scenes.js';
-import { initUI, toast, flyStars, speak, modal, h } from './core/ui.js';
+import { initUI, toast, flyStars, speak, modal, h, onTap } from './core/ui.js';
 import { addStars, collectionProgress } from './core/economy.js';
 import { ensureDailyQuests, trackQuestEvent, checkBadges } from './core/quests.js';
 import { decayNeeds, dayPhase, WELCOME_AFTER_MIN } from './core/pet.js';
@@ -105,8 +105,8 @@ bus.on('progress:check', () => { checkProgress(); store.commit(); });
 const backBtn = document.getElementById('btn-back');
 const soundBtn = document.getElementById('btn-sound');
 const titleEl = document.getElementById('scene-title');
-backBtn.addEventListener('click', () => { audio.play('click'); scenes.back(); });
-soundBtn.addEventListener('click', () => {
+onTap(backBtn, () => { audio.play('click'); scenes.back(); });
+onTap(soundBtn, () => {
   store.state.settings.muted = !store.state.settings.muted;
   applySettings();
   store.commit();

@@ -7,19 +7,27 @@ export function defaultNails() {
   return Array.from({ length: 10 }, () => ({ color: null, color2: '#ffffff', pattern: 'simplu', glitter: false }));
 }
 
+// Ținuta cu care începe Mimi: puloveraș roz, fustă în carouri, poșetuță inimă.
+export function starterOutfit() {
+  return {
+    ...defaultDesign(), type: 'bluza', colorA: '#ff9cc8', colorB: '#ff7fb6', pattern: 'carouri', patternColor: '#ffffff',
+    acc: { shoes: null, socks: null, bag: { id: 'poseta-inima', color: '#ffc6dc' }, jewelry: { id: 'colier-inima', color: '#ffd36b' }, hat: null, gloves: null, wings: null, crown: null },
+  };
+}
+
 export function defaultLook() {
   return {
-    hair: { style: 'mot', color: '#9a6248', color2: '#ff9ccf', gradient: false, decor: 'none', decorColor: '#ff6fa8' },
+    hair: { style: 'mot', color: '#fff4f1', color2: '#ff9ccf', gradient: false, decor: 'none', decorColor: '#ff6fa8' },
     makeup: {
       shadow: { color: null, amount: 60 },
-      lashes: { style: 'naturale', color: '#3a2840' },
+      lashes: { style: 'bogate', color: '#2a1830' },
       lips: { color: null, amount: 60 },
-      blush: { color: '#ff9db5', amount: 35 },
+      blush: { color: '#ff8fb8', amount: 50 },
       glitter: { color: null, amount: 50 },
     },
     nails: defaultNails(),
-    acc: { bow: null, crown: null, glasses: null, earrings: null, scarf: null },
-    outfit: null, // o rochie din atelier purtată de Mimi
+    acc: { bow: { id: 'fundita-mare', color: '#ff6fae' }, crown: null, glasses: null, earrings: null, scarf: null },
+    outfit: starterOutfit(), // o rochie din atelier purtată de Mimi
   };
 }
 

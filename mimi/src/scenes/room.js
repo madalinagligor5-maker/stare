@@ -43,7 +43,7 @@ export const roomScene = {
     const redoBtn = btn({ icon: '↪️', title: 'Refă', onClick: () => undoRedo('redo') });
     const gridBtn = btn({ icon: '▦', label: 'Grilă', cls: s.settings.gridSnap ? 'on' : '', onClick: () => { s.settings.gridSnap = !s.settings.gridSnap; gridBtn.classList.toggle('on', s.settings.gridSnap); ctx.store.commit(); draw(); } });
     stage.appendChild(h('div', { class: 'stage-tools' }, undoBtn, redoBtn, h('div', { class: 'spacer' }), gridBtn));
-    const selBar = h('div', { class: 'stage-bottom sel-tools', hidden: true });
+    const selBar = h('div', { class: 'stage-tools sel-tools sel-top', hidden: true });
     stage.appendChild(selBar);
 
     function draw() {

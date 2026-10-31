@@ -41,13 +41,56 @@ export function btn({ icon = '', label = '', onClick, cls = '', sound = 'click',
   const b = h('button', { class: `btn ${cls}`.trim(), type: 'button', title: title || label || undefined, 'aria-label': title || label || undefined, disabled, ...attrs });
   if (icon) b.appendChild(h('span', { class: 'btn-ico', 'aria-hidden': 'true' }, icon));
   if (label) b.appendChild(h('span', { class: 'btn-lbl' }, label));
-  b.addEventListener('click', (e) => {
+  onTap(b, (e) => {
     if (b.disabled) return;
     if (sound) ctx?.audio.play(sound);
     if (say && (label || title)) speak(title || label);
     onClick(e);
   });
   return b;
+}
+
+// Atingere sigură: răspunde imediat când ridici degetul (fără să aștepte "click"-ul browserului,
+// care uneori se pierde după o tragere). Mouse-ul și tastatura folosesc click-ul obișnuit.
+let lastTap = { t: -1e9, x: 0, y: 0 };
+let ghostGuard = false;
+// După o atingere tratată, browserul trimite și un "click" în același loc. Dacă între timp
+// s-a închis o fereastră, click-ul ar nimeri butonul de dedesubt; îl oprim.
+function installGhostGuard() {
+  if (ghostGuard || typeof document === 'undefined') return;
+  ghostGuard = true;
+  document.addEventListener('click', (e) => {
+    if (!e.isTrusted) return;
+    if (performance.now() - lastTap.t < 700 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 40) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, true);
+}
+
+export function onTap(el, fn) {
+  installGhostGuard();
+  let down = null;
+  let firedAt = -1e9;
+  el.addEventListener('pointerdown', (e) => {
+    down = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY, id: e.pointerId };
+  });
+  el.addEventListener('pointercancel', () => { down = null; });
+  el.addEventListener('pointerup', (e) => {
+    if (!down || e.pointerId !== down.id) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+    down = null;
+    if (moved > 12) return;
+    const r = el.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+    firedAt = performance.now();
+    lastTap = { t: firedAt, x: e.clientX, y: e.clientY };
+    fn(e);
+  });
+  el.addEventListener('click', (e) => {
+    if (performance.now() - firedAt < 700) return; // deja tratat la ridicarea degetului
+    fn(e);
+  });
 }
 
 // ---- Voce (citește cu voce tare pentru copiii care nu știu încă să citească) ----

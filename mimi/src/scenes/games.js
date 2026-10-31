@@ -1,7 +1,7 @@
 // Mini-jocurile: potrivește culorile, memory cu haine, sortează accesorii, bule de spălat, puzzle cu rochii.
 // Dificultatea crește încet când merge bine și scade când e greu. Nu se pierde niciodată.
 
-import { h, btn, modal, svgFromString, burst, burstAt } from '../core/ui.js';
+import { h, btn, modal, svgFromString, burst, burstAt, onTap } from '../core/ui.js';
 import { shuffle, pick, clamp, hexToHsl, hslToHex } from '../core/util.js';
 import { care } from '../core/pet.js';
 import { defaultDesign } from '../core/defaults.js';
@@ -157,7 +157,7 @@ export const memoryGame = {
     root.append(info, h('div', { class: 'game-area' }, grid));
     deck.forEach((c) => {
       const el = h('button', { class: 'mem-card', type: 'button', 'aria-label': 'Carte' }, h('div', { class: 'face back' }, '🐱'), h('div', { class: 'face front' }, svgFromString(c.a)));
-      el.addEventListener('click', () => {
+      onTap(el, () => {
         if (lock || el.classList.contains('open')) return;
         ctx.audio.play('pop');
         el.classList.add('open');
@@ -211,7 +211,7 @@ export const sortGame = {
     root.append(info, h('div', { class: 'game-area' }, h('p', { class: 'hint' }, 'Trage fiecare lucru în cutia potrivită (sau atinge lucrul, apoi cutia)'), itemRow, boxRow));
     const boxEls = boxes.map((b) => {
       const el = h('div', { class: 'sort-box', dataset: { slot: b.slot }, role: 'button', tabindex: '0', 'aria-label': b.name }, h('span', { class: 'sb-ico' }, b.icon), b.name);
-      el.addEventListener('click', () => { if (picked) drop(picked, b.slot, el); });
+      onTap(el, () => { if (picked) drop(picked, b.slot, el); });
       boxRow.appendChild(el);
       return el;
     });
@@ -232,7 +232,7 @@ export const sortGame = {
       it.el.style.outline = '';
     }
     items.forEach((it) => {
-      const el = h('div', { class: 'sort-item', role: 'button', tabindex: '0', 'aria-label': 'Accesoriu' }, svgFromString(it.art));
+      const el = h('div', { class: 'sort-item', role: 'button', tabindex: '0', 'aria-label': 'Accesoriu', dataset: { slot: it.slot } }, svgFromString(it.art));
       it.el = el;
       let ghost = null, moved = false, sx = 0, sy = 0;
       el.addEventListener('pointerdown', (e) => {
@@ -364,7 +364,7 @@ export const puzzleGame = {
         board.appendChild(h('div', { class: 'puzzle-slot', style: { left: `${c * pw}px`, top: `${r * ph}px`, width: `${pw}px`, height: `${ph}px` } }));
         const vb = `${VB.x + (c * VB.w) / cols} ${VB.y + (r * VB.h) / rows} ${VB.w / cols} ${VB.h / rows}`;
         const svg = svgFromString(full.replace('<svg ', `<svg viewBox="${vb}" preserveAspectRatio="none" width="${pw}" height="${ph}" `));
-        const el = h('div', { class: 'puzzle-piece', style: { width: `${pw}px`, height: `${ph}px` } }, svg);
+        const el = h('div', { class: 'puzzle-piece', dataset: { c, r }, style: { width: `${pw}px`, height: `${ph}px` } }, svg);
         pieces.push({ el, c, r, done: false });
       }
     }

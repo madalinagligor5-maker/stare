@@ -190,6 +190,7 @@ body[data-scene="menu"] #topbar { visibility: hidden; }
 /* selecție (decor / obiect cameră) */
 .sel-ring { animation: dash 1s linear infinite; }
 @keyframes dash { to { stroke-dashoffset: -22; } }
+.sel-top { top: 64px; justify-content: center; }
 .sel-tools { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 .sel-tools .btn { min-height: 56px; min-width: 56px; padding: 4px 8px; }
 
@@ -313,7 +314,7 @@ body[data-scene="menu"] #topbar { visibility: hidden; }
 /* ---- Ferestre, mesaje, efecte ---- */
 #modals { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(60, 30, 70, .45); display: flex; align-items: center; justify-content: center; padding: 16px; pointer-events: auto; animation: fadeIn .2s ease; }
-.modal-overlay.out { animation: fadeOut .2s ease forwards; }
+.modal-overlay.out { animation: fadeOut .2s ease forwards; pointer-events: none; }
 .modal { background: #fff; border-radius: 28px; padding: 18px 16px 16px; width: min(460px, 100%); max-height: 92vh; overflow-y: auto; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(60, 20, 80, .35); animation: modalIn .25s ease; }
 @keyframes modalIn { from { transform: scale(.9); opacity: 0; } }
 .modal-ico { font-size: 54px; }
@@ -363,6 +364,105 @@ body.reduce-motion .twinkle, body.reduce-motion .bulb, body.reduce-motion .zzz, 
   .dock { gap: 6px; }
 }
 
+/* ================================================================
+   Aspect nou (după modelul cerut): lucios, roz-lila, butoane-bomboană
+   ================================================================ */
+:root {
+  --bg1: #ffe6f3;
+  --bg2: #e9dcff;
+  --pink: #ff5fa8;
+  --pink-2: #ff8cc6;
+  --lilac: #b693ff;
+  --shadow: 0 3px 0 rgba(214, 120, 170, .35), 0 8px 18px rgba(170, 90, 160, .18);
+  --panel: rgba(255, 255, 255, .86);
+}
+body { background: radial-gradient(circle at 20% 10%, #fff 0, transparent 40%), linear-gradient(165deg, var(--bg1), var(--bg2)); }
+.btn {
+  background: linear-gradient(180deg, #fff 0%, #fff4fa 60%, #ffe4f1 100%);
+  border: 2px solid #fff;
+  box-shadow: var(--shadow), inset 0 -3px 0 rgba(255, 150, 200, .25);
+  color: #6a3570;
+}
+.btn-primary { background: linear-gradient(180deg, #ff9ccf 0%, #ff5fa8 55%, #f2448f 100%); color: #fff; text-shadow: 0 1px 0 rgba(160, 20, 80, .35); }
+.btn-ok { background: linear-gradient(180deg, #7fe3b0 0%, #34c47c 60%, #22a866 100%); color: #fff; }
+.btn-violet { background: linear-gradient(180deg, #cdb4ff 0%, #9b6bff 60%, #8452f0 100%); color: #fff; }
+.btn-soft { background: linear-gradient(180deg, #fff, #f3ebff); }
+#scene-title {
+  font-size: clamp(20px, 5.4vw, 30px);
+  background: linear-gradient(180deg, #ff8cc6, #e93f8f);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 0 #fff) drop-shadow(0 3px 3px rgba(200, 60, 130, .25));
+}
+.star-pill { background: linear-gradient(180deg, #fff, #fff4d6); border: 2px solid #fff; color: #7a4a00; }
+.menu-title {
+  background: linear-gradient(180deg, #ffa6d4 0%, #ff4f9e 70%, #e0328a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 4px 0 #fff) drop-shadow(0 8px 10px rgba(220, 60, 140, .35));
+  text-shadow: none;
+}
+.editor-panel, .dock { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.tab.on, .opt.on { background: linear-gradient(180deg, #ffb3dc, #ff6fb2); color: #fff; }
+
+/* ---- Acasă: camera pe tot ecranul, totul plutește deasupra ---- */
+.home { position: relative; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.home .home-room { background: linear-gradient(180deg, #ffe0ef 60%, #e9c6a0 60%); position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: 0 0 28px 28px; }
+.home .home-room > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.needs-panel { position: absolute; left: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; z-index: 3; width: min(42vw, 170px); }
+.need-row { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .82); border: 2px solid #fff; border-radius: 22px; padding: 3px 8px 3px 3px; box-shadow: 0 4px 12px rgba(170, 90, 160, .18); }
+.need-row .need-ico { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex: 0 0 auto; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .12), 0 0 0 3px #fff; }
+.need-main { flex: 1; min-width: 0; }
+.need-name { font-size: 12px; font-weight: 900; color: #6a3570; display: block; line-height: 1.1; }
+.need-row .need-bar { height: 10px; margin-top: 2px; background: #efe4f4; }
+.need-row .need-fill { box-shadow: inset 0 3px 0 rgba(255, 255, 255, .45); }
+.top-actions { position: absolute; right: 8px; top: 8px; z-index: 3; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.round-btn { width: 56px; height: 56px; padding: 0; border-radius: 18px; position: relative; }
+.round-btn.big { width: 64px; height: auto; min-height: 64px; flex-direction: column; gap: 0; font-size: 11px; border-radius: 22px; padding: 4px; }
+.round-btn.big .btn-ico { font-size: 28px; }
+.red-dot { position: absolute; top: -3px; right: -3px; width: 16px; height: 16px; border-radius: 50%; background: #ff3b5c; border: 3px solid #fff; }
+.quest-card { flex-direction: column; align-items: stretch; gap: 4px; padding: 6px 10px; font-size: 13px; width: 170px; border-radius: 20px; }
+.quest-card .btn-ico { display: none; }
+.quest-card .btn-lbl::before { content: '🎁 '; }
+.qdots { display: flex; gap: 6px; justify-content: center; }
+.qdot { width: 30px; height: 30px; border-radius: 50%; background: #fff0f8; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #ff6fb2; box-shadow: inset 0 0 0 2px #ffd0e6; }
+.qdot.done { background: linear-gradient(180deg, #ffd6ec, #ff8cc6); animation: bump 1.2s ease infinite; }
+.qdot.claimed { background: #d9f7e8; color: #13744a; box-shadow: none; }
+.side-actions { position: absolute; right: 8px; bottom: 96px; z-index: 3; display: flex; flex-direction: column; gap: 8px; }
+.btn-cta {
+  position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 3;
+  min-height: 74px; padding: 8px 22px 8px 14px; border-radius: 40px; font-size: 20px;
+  background: linear-gradient(180deg, #ffb0d8 0%, #ff6fb2 55%, #f04d98 100%); color: #fff;
+  border: 4px solid #fff; box-shadow: 0 6px 0 rgba(214, 60, 140, .35), 0 12px 26px rgba(214, 60, 140, .3);
+  text-shadow: 0 1px 0 rgba(160, 20, 80, .35); white-space: nowrap;
+}
+.btn-cta:active { transform: translateX(-50%) translateY(3px); }
+.btn-cta .btn-ico { font-size: 40px; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .6)); }
+.btn-cta .btn-lbl { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+.btn-cta small { font-size: 12px; font-weight: 700; opacity: .95; }
+.home .mood-bubble { top: auto; bottom: 96px; left: 50%; }
+.home .food-tray, .home .edit-tray { bottom: 14px; z-index: 4; }
+.home .dock { position: relative; display: flex; gap: 6px; padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); border-radius: 26px 26px 0 0; margin-top: -18px; z-index: 4; background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 236, 247, .95)); overflow-x: auto; scrollbar-width: none; }
+.nav-btn { flex: 1 0 58px; flex-direction: column; gap: 0; min-height: 70px; padding: 4px 2px; font-size: 12px; color: #e0328a; border-radius: 20px; }
+.nav-btn .btn-ico { font-size: 32px; filter: drop-shadow(0 2px 2px rgba(200, 60, 140, .2)); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .home .dock { margin-top: 0; }
+  .nav-btn { min-height: 58px; }
+  .nav-btn .btn-ico { font-size: 24px; }
+  .needs-panel { gap: 3px; }
+  .need-row .need-ico { width: 28px; height: 28px; font-size: 15px; }
+  .quest-card { display: none; }
+  .side-actions { bottom: 8px; flex-direction: row; right: 8px; }
+  .round-btn.big { min-height: 56px; width: 56px; }
+  .btn-cta { min-height: 58px; font-size: 15px; left: auto; right: 8px; bottom: 74px; transform: none; padding: 4px 14px 4px 8px; }
+  .btn-cta:active { transform: translateY(3px); }
+  .btn-cta .btn-ico { font-size: 28px; }
+  .btn-cta small { display: none; }
+  .home .mood-bubble { bottom: auto; top: 8px; }
+}
+@media (orientation: landscape) and (min-width: 560px) {
+  .home { flex-direction: column; flex-wrap: nowrap; }
+  .home .dock { width: auto; height: auto; display: flex; overflow-x: auto; grid-template-columns: none; border-radius: 26px 26px 0 0; }
+}
+
 </style>
 </head>
 <body>
@@ -397,7 +497,7 @@ const { bus } = __require('src/core/bus.js');
 const { audio } = __require('src/core/audio.js');
 const { createSaveManager } = __require('src/core/save.js');
 const { SceneManager, getActiveHandles } = __require('src/core/scenes.js');
-const { initUI, toast, flyStars, speak, modal, h } = __require('src/core/ui.js');
+const { initUI, toast, flyStars, speak, modal, h, onTap } = __require('src/core/ui.js');
 const { addStars, collectionProgress } = __require('src/core/economy.js');
 const { ensureDailyQuests, trackQuestEvent, checkBadges } = __require('src/core/quests.js');
 const { decayNeeds, dayPhase, WELCOME_AFTER_MIN } = __require('src/core/pet.js');
@@ -498,8 +598,8 @@ bus.on('progress:check', () => { checkProgress(); store.commit(); });
 const backBtn = document.getElementById('btn-back');
 const soundBtn = document.getElementById('btn-sound');
 const titleEl = document.getElementById('scene-title');
-backBtn.addEventListener('click', () => { audio.play('click'); scenes.back(); });
-soundBtn.addEventListener('click', () => {
+onTap(backBtn, () => { audio.play('click'); scenes.back(); });
+onTap(soundBtn, () => {
   store.state.settings.muted = !store.state.settings.muted;
   applySettings();
   store.commit();
@@ -951,19 +1051,27 @@ function defaultNails() {
   return Array.from({ length: 10 }, () => ({ color: null, color2: '#ffffff', pattern: 'simplu', glitter: false }));
 }
 
+// Ținuta cu care începe Mimi: puloveraș roz, fustă în carouri, poșetuță inimă.
+function starterOutfit() {
+  return {
+    ...defaultDesign(), type: 'bluza', colorA: '#ff9cc8', colorB: '#ff7fb6', pattern: 'carouri', patternColor: '#ffffff',
+    acc: { shoes: null, socks: null, bag: { id: 'poseta-inima', color: '#ffc6dc' }, jewelry: { id: 'colier-inima', color: '#ffd36b' }, hat: null, gloves: null, wings: null, crown: null },
+  };
+}
+
 function defaultLook() {
   return {
-    hair: { style: 'mot', color: '#9a6248', color2: '#ff9ccf', gradient: false, decor: 'none', decorColor: '#ff6fa8' },
+    hair: { style: 'mot', color: '#fff4f1', color2: '#ff9ccf', gradient: false, decor: 'none', decorColor: '#ff6fa8' },
     makeup: {
       shadow: { color: null, amount: 60 },
-      lashes: { style: 'naturale', color: '#3a2840' },
+      lashes: { style: 'bogate', color: '#2a1830' },
       lips: { color: null, amount: 60 },
-      blush: { color: '#ff9db5', amount: 35 },
+      blush: { color: '#ff8fb8', amount: 50 },
       glitter: { color: null, amount: 50 },
     },
     nails: defaultNails(),
-    acc: { bow: null, crown: null, glasses: null, earrings: null, scarf: null },
-    outfit: null, // o rochie din atelier purtată de Mimi
+    acc: { bow: { id: 'fundita-mare', color: '#ff6fae' }, crown: null, glasses: null, earrings: null, scarf: null },
+    outfit: starterOutfit(), // o rochie din atelier purtată de Mimi
   };
 }
 
@@ -1026,7 +1134,7 @@ function defaultState(now = Date.now()) {
   };
 }
 
-Object.assign(__exports, { SCHEMA_VERSION, defaultNails, defaultLook, defaultDesign, defaultState });
+Object.assign(__exports, { SCHEMA_VERSION, defaultNails, starterOutfit, defaultLook, defaultDesign, defaultState });
 };
 __defs['src/core/util.js'] = function (__exports) {
 // Unelte mici folosite peste tot. Nu ating DOM-ul, deci merg și în teste (Node).
@@ -1339,13 +1447,56 @@ function btn({ icon = '', label = '', onClick, cls = '', sound = 'click', title,
   const b = h('button', { class: `btn ${cls}`.trim(), type: 'button', title: title || label || undefined, 'aria-label': title || label || undefined, disabled, ...attrs });
   if (icon) b.appendChild(h('span', { class: 'btn-ico', 'aria-hidden': 'true' }, icon));
   if (label) b.appendChild(h('span', { class: 'btn-lbl' }, label));
-  b.addEventListener('click', (e) => {
+  onTap(b, (e) => {
     if (b.disabled) return;
     if (sound) ctx?.audio.play(sound);
     if (say && (label || title)) speak(title || label);
     onClick(e);
   });
   return b;
+}
+
+// Atingere sigură: răspunde imediat când ridici degetul (fără să aștepte "click"-ul browserului,
+// care uneori se pierde după o tragere). Mouse-ul și tastatura folosesc click-ul obișnuit.
+let lastTap = { t: -1e9, x: 0, y: 0 };
+let ghostGuard = false;
+// După o atingere tratată, browserul trimite și un "click" în același loc. Dacă între timp
+// s-a închis o fereastră, click-ul ar nimeri butonul de dedesubt; îl oprim.
+function installGhostGuard() {
+  if (ghostGuard || typeof document === 'undefined') return;
+  ghostGuard = true;
+  document.addEventListener('click', (e) => {
+    if (!e.isTrusted) return;
+    if (performance.now() - lastTap.t < 700 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 40) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, true);
+}
+
+function onTap(el, fn) {
+  installGhostGuard();
+  let down = null;
+  let firedAt = -1e9;
+  el.addEventListener('pointerdown', (e) => {
+    down = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY, id: e.pointerId };
+  });
+  el.addEventListener('pointercancel', () => { down = null; });
+  el.addEventListener('pointerup', (e) => {
+    if (!down || e.pointerId !== down.id) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+    down = null;
+    if (moved > 12) return;
+    const r = el.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+    firedAt = performance.now();
+    lastTap = { t: firedAt, x: e.clientX, y: e.clientY };
+    fn(e);
+  });
+  el.addEventListener('click', (e) => {
+    if (performance.now() - firedAt < 700) return; // deja tratat la ridicarea degetului
+    fn(e);
+  });
 }
 
 // ---- Voce (citește cu voce tare pentru copiii care nu știu încă să citească) ----
@@ -1552,7 +1703,7 @@ function downloadBlob(blob, filename) {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
 }
 
-Object.assign(__exports, { initUI, h, svgFromString, btn, speak, toast, modal, confirmBox, promptText, burst, burstAt, flyStars, slider, swatches, optionRow, tabs, downloadBlob });
+Object.assign(__exports, { initUI, h, svgFromString, btn, onTap, speak, toast, modal, confirmBox, promptText, burst, burstAt, flyStars, slider, swatches, optionRow, tabs, downloadBlob });
 };
 __defs['src/core/economy.js'] = function (__exports) {
 // Economia cu stele ⭐: câștig, cumpărare, colecții. Funcții pure peste stare.
@@ -2446,10 +2597,10 @@ const { patternDef, materialLayer } = __require('src/art/patterns.js');
 const { mirrorPath, sparkle, starPoints, heartPath, newPrefix } = __require('src/art/svg.js');
 const { shade } = __require('src/core/util.js');
 
-const FUR = '#ffe3cc';
-const FUR_LINE = '#e2b298';
-const BELLY = '#fff6ee';
-const EAR_IN = '#ffb8cf';
+const FUR = '#fffaf8';
+const FUR_LINE = '#efc3d3';
+const BELLY = '#ffffff';
+const EAR_IN = '#ffadc9';
 
 const TORSO = 'M150 196 C 125 196 112 205 112 222 C 112 245 118 262 120 270 C 114 285 112 300 118 312 L 182 312 C 188 300 186 285 180 270 C 182 262 188 245 188 222 C 188 205 175 196 150 196 Z';
 const ARM_L = 'M118 210 C 104 218 94 244 92 276 L 108 278 C 110 252 116 234 126 220 Z';
@@ -2569,18 +2720,18 @@ function eyeMarkup(cx, cy, side, look, p, expr) {
     return `<g id="${p}-eye${side < 0 ? 'L' : 'R'}">${s}</g>`;
   }
   const big = expr === 'curious' ? 1.08 : 1;
-  s += `<ellipse cx="${cx}" cy="${cy}" rx="${21 * big}" ry="${24 * big}" fill="#fff" stroke="#4a3048" stroke-width="2.5"/>`;
-  s += `<g id="${p}-pup${side < 0 ? 'L' : 'R'}"><ellipse cx="${cx}" cy="${cy + 2}" rx="15" ry="18" fill="#3aa6b9"/><ellipse cx="${cx}" cy="${cy + 4}" rx="15" ry="9" fill="#2b8396" opacity=".5"/><ellipse cx="${cx}" cy="${cy + 2}" rx="${expr === 'curious' ? 9.5 : 8}" ry="${expr === 'curious' ? 12.5 : 11}" fill="#2a1d2e"/><circle cx="${cx - 5}" cy="${cy - 5}" r="5.2" fill="#fff"/><circle cx="${cx + 5}" cy="${cy + 7}" r="2.4" fill="#fff"/></g>`;
+  s += `<ellipse cx="${cx}" cy="${cy}" rx="${23 * big}" ry="${26 * big}" fill="#fff" stroke="#3a2340" stroke-width="3"/>`;
+  s += `<g id="${p}-pup${side < 0 ? 'L' : 'R'}"><ellipse cx="${cx}" cy="${cy + 2}" rx="18" ry="21" fill="#22b3c6"/><ellipse cx="${cx}" cy="${cy + 2}" rx="18" ry="21" fill="none" stroke="#137f95" stroke-width="2.5"/><ellipse cx="${cx}" cy="${cy + 9}" rx="15" ry="9" fill="#7fe3ec" opacity=".55"/><ellipse cx="${cx}" cy="${cy + 1}" rx="${expr === 'curious' ? 10.5 : 9}" ry="${expr === 'curious' ? 13.5 : 12}" fill="#1d1426"/><circle cx="${cx - 6}" cy="${cy - 7}" r="6.5" fill="#fff"/><circle cx="${cx + 6}" cy="${cy + 8}" r="2.8" fill="#fff"/><circle cx="${cx + 7}" cy="${cy - 9}" r="1.8" fill="#fff"/></g>`;
   if (expr === 'pout') s += `<path d="M${cx - 24} ${cy - 30} L ${cx + 24} ${cy - 30} L ${cx + 24} ${cy - 8} Q ${cx} ${cy - 2} ${cx - 24} ${cy - 8} Z" fill="${FUR}"/><path d="M${cx - 21} ${cy - 8} Q ${cx} ${cy - 2} ${cx + 21} ${cy - 8}" stroke="#4a3048" stroke-width="2.5" fill="none"/>`;
   // gene pe marginea de sus, spre exterior
   for (let i = 0; i < lash.n; i++) {
     const t = lash.n === 1 ? 0.5 : i / (lash.n - 1);
     const deg = side < 0 ? 196 + t * 52 : 344 - t * 52;
     const a = (deg * Math.PI) / 180;
-    const px = cx + 21 * Math.cos(a), py = cy + 24 * Math.sin(a);
+    const px = cx + 23 * Math.cos(a), py = cy + 26 * Math.sin(a);
     const ex = px + lash.len * Math.cos(a), ey = py + lash.len * Math.sin(a) - lash.curl * 0.4;
     const qx = px + lash.len * 0.7 * Math.cos(a) + side * lash.curl, qy = py + lash.len * 0.7 * Math.sin(a) + lash.curl * 0.6;
-    s += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="${lashColor}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    s += `<path d="M${px.toFixed(1)} ${py.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="${lashColor}" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
   }
   return `<g id="${p}-eye${side < 0 ? 'L' : 'R'}">${s}</g>`;
 }
@@ -2617,9 +2768,9 @@ function renderFace(look, p, expr = 'happy') {
   s += `<ellipse cx="92" cy="160" rx="${18 * puff}" ry="${10 * puff}" fill="${blush}" opacity="${bo.toFixed(2)}"/><ellipse cx="208" cy="160" rx="${18 * puff}" ry="${10 * puff}" fill="${blush}" opacity="${bo.toFixed(2)}"/>`;
   s += eyeMarkup(114, 128, -1, look, p, expr) + eyeMarkup(186, 128, 1, look, p, expr);
   if (expr === 'curious') s += '<path d="M98 92 Q 114 82 130 92 M170 92 Q 186 82 202 92" stroke="#c9917a" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
-  s += `<path d="${heartPath(150, 157, 0.95)}" fill="#ff8fb1" stroke="#e0718f" stroke-width="1.5"/>`;
+  s += `<path d="${heartPath(150, 157, 0.95)}" fill="#ff86b0" stroke="#e8679a" stroke-width="1.5"/><ellipse cx="146" cy="153" rx="2.5" ry="1.5" fill="#fff" opacity=".8"/>`;
   s += mouthMarkup(look, expr);
-  s += '<g stroke="#c99a86" stroke-width="2.5" stroke-linecap="round"><path d="M84 150 L 46 143"/><path d="M84 158 L 44 160"/><path d="M86 166 L 50 176"/><path d="M216 150 L 254 143"/><path d="M216 158 L 256 160"/><path d="M214 166 L 250 176"/></g>';
+  s += '<g stroke="#e4b9c8" stroke-width="2.2" stroke-linecap="round"><path d="M84 150 L 46 143"/><path d="M84 158 L 44 160"/><path d="M86 166 L 50 176"/><path d="M216 150 L 254 143"/><path d="M216 158 L 256 160"/><path d="M214 166 L 250 176"/></g>';
   if (mk.glitter?.color) {
     const o = (0.3 + mk.glitter.amount / 140).toFixed(2);
     s += `<g opacity="${o}">${[[86, 140, 5], [100, 172, 4], [214, 140, 5], [200, 172, 4], [112, 94, 4], [188, 94, 4], [150, 140, 3]].map(([x, y, r], i) => sparkle(x, y, r, mk.glitter.color, `class="twinkle" style="animation-delay:${i * 0.2}s"`)).join('')}</g>`;
@@ -2674,6 +2825,7 @@ function renderFigure(opts = {}) {
   if (isMimi) s += `<ellipse cx="150" cy="268" rx="22" ry="32" fill="${BELLY}"/>`;
   else s += '<path d="M150 200 L 150 310" stroke="#cdb08c" stroke-width="1.5" stroke-dasharray="5 4"/>';
   s += `<circle cx="100" cy="284" r="12" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/><circle cx="200" cy="284" r="12" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/>`;
+  if (isMimi) s += '<g fill="#ffb3cb"><ellipse cx="100" cy="288" rx="5" ry="4"/><ellipse cx="200" cy="288" rx="5" ry="4"/></g>';
   s += '</g>';
   s += `<g class="fig-dress">${o.dress}</g>`;
   s += `<g class="fig-over">${isMimi ? pawNails(look?.nails) : ''}${o.over}</g>`;
@@ -2684,6 +2836,7 @@ function renderFigure(opts = {}) {
   s += `<g id="${p}-head" class="fig-head"${isMimi ? '' : ' transform="translate(150 200) scale(.62) translate(-150 -200)"'}>`;
   s += `<path d="${TUFT_L}" fill="${furC}" stroke="${lineC}" stroke-width="2"/><path d="${mirrorPath(TUFT_L)}" fill="${furC}" stroke="${lineC}" stroke-width="2"/>`;
   s += `<path d="${HEAD}" fill="${furC}" stroke="${lineC}" stroke-width="2.5"/>`;
+  if (isMimi) s += `<path d="M126 44 Q 138 30 146 42 Q 152 28 162 42 Q 172 32 176 46" fill="${furC}" stroke="${lineC}" stroke-width="2"/><path d="M128 46 L 174 48" stroke="${furC}" stroke-width="5"/>`;
   if (isMimi) {
     s += `<g id="${p}-face">${renderFace(look, p, expr)}</g>`;
     if (style) s += `<g class="hair-front">${style.front(hf.fill)}${hairEffects(hairState, hair.color)}</g>`;
@@ -3170,7 +3323,7 @@ const FOODS = [
   { icon: '🍪', name: 'Biscuite', hunger: 12 },
 ];
 
-const MIMI_T = { x: 107, y: 222, k: 0.62 }; // poziția lui Mimi în cameră
+const MIMI_T = { x: 83, y: 192, k: 0.78 }; // poziția lui Mimi în cameră
 
 function moodText(s, mood, phase) {
   const name = s.pet.name;
@@ -3193,7 +3346,7 @@ const homeScene = {
     const phase = ctx.phase();
     let mode = 'idle'; // idle | feed | play
 
-    const svg = svgFromString(`<svg viewBox="0 0 400 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Camera"><g class="room"></g><g transform="translate(${MIMI_T.x} ${MIMI_T.y}) scale(${MIMI_T.k})"><g class="mimi"></g></g><g class="light"></g></svg>`);
+    const svg = svgFromString(`<svg viewBox="0 0 400 520" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Camera"><g class="room"></g><g transform="translate(${MIMI_T.x} ${MIMI_T.y}) scale(${MIMI_T.k})"><g class="mimi"></g></g><g class="light"></g></svg>`);
     const roomG = svg.querySelector('.room');
     const lightG = svg.querySelector('.light');
     const drawRoom = () => {
@@ -3208,15 +3361,18 @@ const homeScene = {
     });
     const bubble = h('div', { class: 'mood-bubble', role: 'status' }, '');
     const roomBox = h('div', { class: 'home-room' }, svg, bubble);
+    // (nevoile, butoanele și navigarea plutesc peste cameră)
     const zzzBox = h('div', {});
     roomBox.appendChild(zzzBox);
 
     // ---- nevoi ----
     const needEls = {};
-    const needs = h('div', { class: 'needs' }, NEEDS.map((n) => {
+    const needs = h('div', { class: 'needs-panel' }, NEEDS.map((n) => {
       const fill = h('div', { class: 'need-fill', style: { background: n.color } });
       needEls[n.id] = fill;
-      return h('div', { class: 'need', title: n.name }, h('div', { class: 'need-top' }, h('span', { class: 'need-ico' }, n.icon), h('span', {}, n.name)), h('div', { class: 'need-bar' }, fill));
+      return h('div', { class: 'need-row', title: n.name },
+        h('span', { class: 'need-ico', style: { background: n.color } }, n.icon),
+        h('div', { class: 'need-main' }, h('span', { class: 'need-name' }, n.name), h('div', { class: 'need-bar' }, fill)));
     }));
     const refresh = () => {
       for (const n of NEEDS) needEls[n.id].style.width = `${Math.round(s.pet.needs[n.id])}%`;
@@ -3224,6 +3380,10 @@ const homeScene = {
       mimi.setMood(mood);
       if (!bubble.dataset.locked) bubble.textContent = moodText(s, mood, phase);
       sleepBtn.querySelector('.btn-ico').textContent = s.pet.sleeping ? '☀️' : '🌙';
+      const pending = s.quests.list.filter((q) => q.done && !q.claimed).length;
+      questDot.hidden = !pending;
+      questDots.innerHTML = '';
+      s.quests.list.forEach((q) => questDots.appendChild(h('span', { class: `qdot ${q.claimed ? 'claimed' : q.done ? 'done' : ''}` }, q.claimed ? '✓' : q.done ? '🎁' : '♡')));
       sleepBtn.querySelector('.btn-lbl').textContent = s.pet.sleeping ? 'Trezește' : 'Somn';
       zzzBox.innerHTML = '';
       if (s.pet.sleeping) {
@@ -3347,12 +3507,12 @@ const homeScene = {
       foodTray.hidden = m !== 'feed';
       playBar.hidden = m !== 'play';
       wand.hidden = m !== 'play';
-      careBar.style.visibility = m === 'idle' ? 'visible' : 'hidden';
+      cta.style.visibility = m === 'idle' ? 'visible' : 'hidden';
       if (m === 'play') { playDist = 0; playGiven = 0; lastPt = null; wand.style.left = '50%'; wand.style.top = '50%'; say('Prinde pana! 🪶', 1800); }
       if (m === 'feed') say('Trage mâncarea spre mine! 🍽️', 2000);
     }
 
-    const sleepBtn = btn({ icon: '🌙', label: 'Somn', cls: 'btn-col', say: true, onClick: () => {
+    const sleepBtn = btn({ icon: '🌙', label: 'Somn', cls: 'nav-btn', say: true, onClick: () => {
       s.pet.sleeping = !s.pet.sleeping;
       if (s.pet.sleeping) {
         ctx.audio.melody([76, 74, 72, 67, 69, 72, 67], 0.32, 'sine', 0.1);
@@ -3367,34 +3527,59 @@ const homeScene = {
       ctx.store.commit();
       refresh();
     } });
-    const careBar = h('div', { class: 'care-bar' },
-      btn({ icon: '🐟', label: 'Hrănește', cls: 'btn-col', say: true, onClick: () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode('feed'); } }),
-      btn({ icon: '🧶', label: 'Joacă', cls: 'btn-col', say: true, onClick: () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode('play'); } }),
-      btn({ icon: '🛁', label: 'Spală', cls: 'btn-col', say: true, onClick: () => ctx.go('salon', { tab: 'wash' }) }),
-      sleepBtn,
-      btn({ icon: '💗', label: 'Mângâie', cls: 'btn-col', say: true, onClick: () => {
-        if (s.pet.sleeping) { say('Shh… doarme. 💤'); return; }
-        mimi.flash('purr', 1600); ctx.audio.play('purr');
-        care(s.pet, 'love', 6); ctx.track('pet');
-        const r = mimiRect(); burst(r.left + r.width / 2, r.top + r.height * 0.25, ['💖', '💗'], 8);
-        say('Rrrr… te iubesc! 💗'); refresh();
-      } }),
-    );
+    const petMimi = () => {
+      if (s.pet.sleeping) { say('Shh… doarme. 💤'); return; }
+      mimi.flash('purr', 1600); ctx.audio.play('purr');
+      care(s.pet, 'love', 6); ctx.track('pet');
+      const r = mimiRect(); burst(r.left + r.width / 2, r.top + r.height * 0.25, ['💖', '💗'], 8);
+      say('Rrrr… te iubesc! 💗'); refresh();
+    };
+    const feedBtn = () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode(mode === 'feed' ? 'idle' : 'feed'); };
+    const playBtn = () => { if (s.pet.sleeping) { say('Mimi doarme acum. 💤'); return; } setMode('play'); };
 
-    // ---- navigare ----
-    const claimable = s.quests.list.filter((q) => q.done && !q.claimed).length;
+    // butonul mare, ca în jocurile de pe telefon
+    const cta = btn({ icon: '💗', label: 'Joacă-te cu Mimi', cls: 'btn-cta', say: true, onClick: playBtn });
+    cta.querySelector('.btn-lbl').appendChild(h('small', {}, 'Mișcă pana și fă-o să râdă!'));
+    roomBox.appendChild(cta);
+
+    // butoane rotunde sus-dreapta + cardul cu misiunile zilei
+    const questDot = h('span', { class: 'red-dot', hidden: true });
+    const questDots = h('div', { class: 'qdots' });
+    const questBtn = btn({ icon: '🏅', title: 'Misiuni și insigne', cls: 'round-btn', say: true, onClick: () => ctx.go('quests') });
+    questBtn.appendChild(questDot);
+    roomBox.appendChild(h('div', { class: 'top-actions' },
+      h('div', { class: 'row', style: { justifyContent: 'flex-end', flexWrap: 'nowrap' } },
+        questBtn,
+        btn({ icon: '🚪', title: 'Garderobă', cls: 'round-btn', say: true, onClick: () => ctx.go('wardrobe') }),
+        btn({ icon: '🛋️', title: 'Decorează camera', cls: 'round-btn', say: true, onClick: () => ctx.go('room') })),
+      btn({ icon: '🎁', label: 'Misiunile zilei', cls: 'quest-card', say: true, onClick: () => ctx.go('quests') }),
+    ));
+    roomBox.querySelector('.quest-card').appendChild(questDots);
+    roomBox.appendChild(h('div', { class: 'side-actions' },
+      btn({ icon: '📸', label: 'Poză', cls: 'round-btn big', say: true, onClick: () => ctx.go('photo', { from: 'home' }) }),
+      btn({ icon: '🖼️', label: 'Album', cls: 'round-btn big', say: true, onClick: () => ctx.go('album') }),
+      btn({ icon: '💗', label: 'Mângâie', cls: 'round-btn big', say: true, onClick: petMimi }),
+    ));
+
+    // ---- navigare jos ----
     const dock = h('nav', { class: 'dock', 'aria-label': 'Locuri' },
-      btn({ icon: '💇', label: 'Salon', cls: 'btn-col', say: true, onClick: () => ctx.go('salon') }),
-      btn({ icon: '👗', label: 'Atelier', cls: 'btn-col', say: true, onClick: () => ctx.go('atelier') }),
-      btn({ icon: '🚪', label: 'Garderobă', cls: 'btn-col', say: true, onClick: () => ctx.go('wardrobe') }),
-      btn({ icon: '🛋️', label: 'Decorează', cls: 'btn-col', say: true, onClick: () => ctx.go('room') }),
-      btn({ icon: '🛍️', label: 'Magazin', cls: 'btn-col', say: true, onClick: () => ctx.go('shop') }),
-      btn({ icon: '🏅', label: claimable ? `Misiuni (${claimable})` : 'Misiuni', cls: `btn-col ${claimable ? 'on' : ''}`, say: true, onClick: () => ctx.go('quests') }),
-      btn({ icon: '🎲', label: 'Jocuri', cls: 'btn-col', say: true, onClick: () => ctx.go('games') }),
-      btn({ icon: '🖼️', label: 'Album', cls: 'btn-col', say: true, onClick: () => ctx.go('album') }),
+      btn({ icon: '💇', label: 'Salon', cls: 'nav-btn', say: true, onClick: () => ctx.go('salon') }),
+      btn({ icon: '👗', label: 'Atelier', cls: 'nav-btn', say: true, onClick: () => ctx.go('atelier') }),
+      btn({ icon: '🍓', label: 'Mâncare', cls: 'nav-btn', say: true, onClick: feedBtn }),
+      btn({ icon: '🎲', label: 'Jocuri', cls: 'nav-btn', say: true, onClick: () => ctx.go('games') }),
+      sleepBtn,
+      btn({ icon: '🛍️', label: 'Magazin', cls: 'nav-btn', say: true, onClick: () => ctx.go('shop') }),
     );
+    sleepBtn.className = 'btn nav-btn';
 
-    root.appendChild(h('div', { class: 'home' }, h('div', { class: 'home-main' }, needs, h('div', { class: 'home-mid' }, roomBox, careBar)), dock));
+    root.appendChild(h('div', { class: 'home' }, roomBox, needs, dock));
+    // pe ecran lat, camera se arată întreagă; pe ecran înalt, umple tot
+    const fitRoom = () => {
+      const r = roomBox.getBoundingClientRect();
+      if (r.height) svg.setAttribute('preserveAspectRatio', r.width / r.height > 0.95 ? 'xMidYMax meet' : 'xMidYMax slice');
+    };
+    fitRoom();
+    scope.on(window, 'resize', fitRoom);
     scope.sub(ctx.bus.on('state', refresh));
     scope.interval(() => {
       if (s.pet.sleeping) { care(s.pet, 'sleep', 1); ctx.store.commit(); }
@@ -4784,7 +4969,7 @@ const roomScene = {
     const redoBtn = btn({ icon: '↪️', title: 'Refă', onClick: () => undoRedo('redo') });
     const gridBtn = btn({ icon: '▦', label: 'Grilă', cls: s.settings.gridSnap ? 'on' : '', onClick: () => { s.settings.gridSnap = !s.settings.gridSnap; gridBtn.classList.toggle('on', s.settings.gridSnap); ctx.store.commit(); draw(); } });
     stage.appendChild(h('div', { class: 'stage-tools' }, undoBtn, redoBtn, h('div', { class: 'spacer' }), gridBtn));
-    const selBar = h('div', { class: 'stage-bottom sel-tools', hidden: true });
+    const selBar = h('div', { class: 'stage-tools sel-tools sel-top', hidden: true });
     stage.appendChild(selBar);
 
     function draw() {
@@ -5174,7 +5359,7 @@ Object.assign(__exports, { runwayScores, runwayScene });
 __defs['src/scenes/photo.js'] = function (__exports) {
 // "Fă poză": fundal, ramă, autocolante, expresie. Exportă PNG, salvează în album, distribuie.
 
-const { h, btn, tabs, optionRow, toast, modal, svgFromString, downloadBlob, confirmBox } = __require('src/core/ui.js');
+const { h, btn, tabs, optionRow, toast, modal, svgFromString, downloadBlob, confirmBox, onTap } = __require('src/core/ui.js');
 const { gesture, svgPoint } = __require('src/core/input.js');
 const { clone, clamp, uid } = __require('src/core/util.js');
 const { renderFigure } = __require('src/art/figure.js');
@@ -5391,7 +5576,7 @@ const albumScene = {
         const art = h('div', { class: 'card-art', style: { aspectRatio: '3 / 4' } }, svgFromString(photoSVG(ph)));
         const card = h('div', { class: 'card' }, art, h('div', { class: 'card-title' }, new Date(ph.created).toLocaleDateString('ro-RO')),
           h('div', { class: 'card-actions' }, btn({ icon: '🔍', title: 'Vezi poza', onClick: () => open(ph) }), btn({ icon: '🗑️', title: 'Șterge poza', onClick: () => del(ph) })));
-        art.addEventListener('click', () => open(ph));
+        onTap(art, () => open(ph));
         grid.appendChild(card);
       }
       scroll.appendChild(grid);
@@ -5652,7 +5837,7 @@ __defs['src/scenes/games.js'] = function (__exports) {
 // Mini-jocurile: potrivește culorile, memory cu haine, sortează accesorii, bule de spălat, puzzle cu rochii.
 // Dificultatea crește încet când merge bine și scade când e greu. Nu se pierde niciodată.
 
-const { h, btn, modal, svgFromString, burst, burstAt } = __require('src/core/ui.js');
+const { h, btn, modal, svgFromString, burst, burstAt, onTap } = __require('src/core/ui.js');
 const { shuffle, pick, clamp, hexToHsl, hslToHex } = __require('src/core/util.js');
 const { care } = __require('src/core/pet.js');
 const { defaultDesign } = __require('src/core/defaults.js');
@@ -5808,7 +5993,7 @@ const memoryGame = {
     root.append(info, h('div', { class: 'game-area' }, grid));
     deck.forEach((c) => {
       const el = h('button', { class: 'mem-card', type: 'button', 'aria-label': 'Carte' }, h('div', { class: 'face back' }, '🐱'), h('div', { class: 'face front' }, svgFromString(c.a)));
-      el.addEventListener('click', () => {
+      onTap(el, () => {
         if (lock || el.classList.contains('open')) return;
         ctx.audio.play('pop');
         el.classList.add('open');
@@ -5862,7 +6047,7 @@ const sortGame = {
     root.append(info, h('div', { class: 'game-area' }, h('p', { class: 'hint' }, 'Trage fiecare lucru în cutia potrivită (sau atinge lucrul, apoi cutia)'), itemRow, boxRow));
     const boxEls = boxes.map((b) => {
       const el = h('div', { class: 'sort-box', dataset: { slot: b.slot }, role: 'button', tabindex: '0', 'aria-label': b.name }, h('span', { class: 'sb-ico' }, b.icon), b.name);
-      el.addEventListener('click', () => { if (picked) drop(picked, b.slot, el); });
+      onTap(el, () => { if (picked) drop(picked, b.slot, el); });
       boxRow.appendChild(el);
       return el;
     });
@@ -5883,7 +6068,7 @@ const sortGame = {
       it.el.style.outline = '';
     }
     items.forEach((it) => {
-      const el = h('div', { class: 'sort-item', role: 'button', tabindex: '0', 'aria-label': 'Accesoriu' }, svgFromString(it.art));
+      const el = h('div', { class: 'sort-item', role: 'button', tabindex: '0', 'aria-label': 'Accesoriu', dataset: { slot: it.slot } }, svgFromString(it.art));
       it.el = el;
       let ghost = null, moved = false, sx = 0, sy = 0;
       el.addEventListener('pointerdown', (e) => {
@@ -6015,7 +6200,7 @@ const puzzleGame = {
         board.appendChild(h('div', { class: 'puzzle-slot', style: { left: `${c * pw}px`, top: `${r * ph}px`, width: `${pw}px`, height: `${ph}px` } }));
         const vb = `${VB.x + (c * VB.w) / cols} ${VB.y + (r * VB.h) / rows} ${VB.w / cols} ${VB.h / rows}`;
         const svg = svgFromString(full.replace('<svg ', `<svg viewBox="${vb}" preserveAspectRatio="none" width="${pw}" height="${ph}" `));
-        const el = h('div', { class: 'puzzle-piece', style: { width: `${pw}px`, height: `${ph}px` } }, svg);
+        const el = h('div', { class: 'puzzle-piece', dataset: { c, r }, style: { width: `${pw}px`, height: `${ph}px` } }, svg);
         pieces.push({ el, c, r, done: false });
       }
     }
